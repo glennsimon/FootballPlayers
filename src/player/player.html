@@ -1,6 +1,11 @@
 <html>
   <head> </head>
   <body>
+    <div class="buttons">
+      <button onclick="stand()">STAND</button>
+      <button onclick="walk()">WALK</button>
+      <button onclick="run()">RUN</button>
+    </div>
     <div class="floor">
       <div class="waist">
         <div class="torso">
@@ -150,22 +155,64 @@
         margin: 0;
         padding: 0;
       }
+      .buttons {
+        display: flex;
+        flex-direction: column;
+      }
+      button {
+        position: static;
+      }
+      @keyframes rotate15 {
+        from {transform: rotateX(45deg)}
+        to {transform: rotateX(45deg) rotateZ(360deg)}
+      }
+      @keyframes swing45 {
+        33% {
+          transform: rotateX(45deg);
+        }
+        66% {
+          transform: rotateX(-45deg);
+        }
+      }
+      @keyframes swing45_60 {
+        33% {
+          transform: rotateX(45deg);
+        }
+        66% {
+          transform: rotateX(-60deg);
+        }
+      }
+      @keyframes kneeSwingWalk {
+        66% {
+          transform: rotateX(-30deg);
+        }
+      }
+      @keyframes kneeSwingRun {
+        66% {
+          transform: rotateX(-90deg);
+        }
+      }
+      @keyframes elbows30 {
+        to {
+          transform: rotateX(30deg);
+          animation-timing-function: ease-in;
+        }
+      }
+      @keyframes elbows90 {
+        to {
+          transform: rotateX(90deg);
+          animation-timing-function: ease-in;
+        }
+      }
       `;
 
       const volumes = {
-        // thigh: [2.5, 2.5, 2.5, 2.5, 14, 2],
-        // calf: [2, 2, 2, 2, 15, 1],
-        // foot: [2, 6, 2, 2, 0, 2],
-        // torso: [5, 5, 6, 6, 1, 19],
-        // upper: [2, 2, 2, 2, 10, 2],
-        // lower: [1.5, 1.5, 1.5, 1.5, 10, 2],
-        // helmet: [6, 6, 6, 6, 0, 12],
         torso: [50, 50, 60, 60, 10, 190],
         thigh: [25, 25, 25, 25, 140, 20],
         calf: [20, 20, 20, 20, 150, 10],
         foot: [60, 20, 20, 20, 0, 20],
         shoulder: [30, 30, 30, 30, 30, 30],
-        upper: [20, 20, 20, 20, 100, 20],
+        upper: [20, 20, 20, 20, 110, 10],
         lower: [15, 15, 15, 15, 100, 20],
         helmet: [50, 50, 50, 50, 0, 100],
       };
@@ -227,66 +274,97 @@
       .floor {
         left: 300px;
         top: 500px;
-        width: 200px;
-        height: 300px;
-        background: lightblue;
         perspective: 10000px;
-        transform: rotateX(45deg) rotateZ(45deg);
+        animation: 15s linear infinite rotate15;
+        // width: 200px;
+        // height: 300px;
+        // background: lightblue;
       }
       .waist {
         transform: translateZ(300px) rotateX(-90deg);
       }
       .leg__left {
-        transform: translateX(30px);
+        left: 30px;
       }
       .leg__right {
-        transform: translateX(-30px);
+        left: -30px;
       }
       .knee {
-        transform: translateY(140px);
+        top: 140px;
       }
       .foot {
-        transform: translateY(160px);
+        top: 160px;
       }
       .pads {
-        transform: translateY(-160px);
+        top: -160px;
       }
       .arm__left {
-        transform: translateX(80px);
+        left: 80px;
       }
       .arm__right {
-        transform: translateX(-80px);
+        left: -80px;
       }
       .elbow {
-        transform: translateY(120px);
+        top: 120px;
       }
       .neck {
-        transform: translateY(-200px);
+        top: -200px;
       }
       `;
       document.head.appendChild(style);
 
       const animation = document.createElement('style');
-      animation.innerHTML = `
-      .floor {
-        animation 15s infinite rotate;
+
+      function stand() {
+        animation.innerHTML = '';
       }
+
+      function walk() {
+        animation.innerHTML = `
       .arm__right {
-        transform: translateX(-80px);
-        animation: 1s infinite alternate swing;
+        animation: 1s 0.5s infinite linear swing45;
       }
-      @keyframes swing {
-        33% {
-          transform: translateX(-80px) rotateX(45deg);
-        }
-        50% {
-          transform: translateX(-80px);
-        }
-        66% {
-          transform: translateX(-80px) rotateX(-45deg);
-        }
+      .arm__left {
+        animation: 1s infinite linear swing45;
+      }
+      .leg__right {
+        animation: 1s infinite linear swing45;
+      }
+      .leg__left {
+        animation: 1s 0.5s infinite linear swing45;
+      }
+      .knee {
+        animation: 0.5s infinite linear kneeSwingWalk;
+      }
+      .elbow {
+        animation: 0.5s forwards elbows30;
       }
       `;
+      }
+
+      function run() {
+        animation.innerHTML = `
+      .arm__right {
+        animation: 0.5s 0.25s infinite linear swing45_60;
+      }
+      .arm__left {
+        animation: 0.5s infinite linear swing45_60;
+      }
+      .leg__right {
+        animation: 0.5s infinite linear swing45_60;
+      }
+      .leg__left {
+        animation: 0.5s 0.25s infinite linear swing45_60;
+      }
+      .knee {
+        animation: 0.25s infinite linear kneeSwingRun;
+      }
+      .elbow {
+        animation: 0.5s forwards elbows90;
+      }
+      `;
+      }
+
       document.body.appendChild(animation);
     </script>
   </body>
