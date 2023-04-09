@@ -1,0 +1,293 @@
+<html>
+  <head> </head>
+  <body>
+    <div class="floor">
+      <div class="waist">
+        <div class="torso">
+          <div class="torso__front"></div>
+          <div class="torso__back"></div>
+          <div class="torso__right"></div>
+          <div class="torso__left"></div>
+          <div class="torso__top"></div>
+          <div class="torso__bottom"></div>
+        </div>
+        <div class="leg__left">
+          <div class="thigh">
+            <div class="thigh__front"></div>
+            <div class="thigh__back"></div>
+            <div class="thigh__right"></div>
+            <div class="thigh__left"></div>
+            <div class="thigh__top"></div>
+            <div class="thigh__bottom"></div>
+          </div>
+          <div class="knee">
+            <div class="calf">
+              <div class="calf__front"></div>
+              <div class="calf__back"></div>
+              <div class="calf__right"></div>
+              <div class="calf__left"></div>
+              <div class="calf__top"></div>
+              <div class="calf__bottom"></div>
+            </div>
+            <div class="foot">
+              <div class="foot__front"></div>
+              <div class="foot__back"></div>
+              <div class="foot__right"></div>
+              <div class="foot__left"></div>
+              <div class="foot__top"></div>
+              <div class="foot__bottom"></div>
+            </div>
+          </div>
+        </div>
+        <div class="leg__right">
+          <div class="thigh">
+            <div class="thigh__front"></div>
+            <div class="thigh__back"></div>
+            <div class="thigh__right"></div>
+            <div class="thigh__left"></div>
+            <div class="thigh__top"></div>
+            <div class="thigh__bottom"></div>
+          </div>
+          <div class="knee">
+            <div class="calf">
+              <div class="calf__front"></div>
+              <div class="calf__back"></div>
+              <div class="calf__right"></div>
+              <div class="calf__left"></div>
+              <div class="calf__top"></div>
+              <div class="calf__bottom"></div>
+            </div>
+            <div class="foot">
+              <div class="foot__front"></div>
+              <div class="foot__back"></div>
+              <div class="foot__right"></div>
+              <div class="foot__left"></div>
+              <div class="foot__top"></div>
+              <div class="foot__bottom"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pads">
+          <div class="arm__left">
+            <div class="shoulder">
+              <div class="shoulder__front"></div>
+              <div class="shoulder__back"></div>
+              <div class="shoulder__right"></div>
+              <div class="shoulder__left"></div>
+              <div class="shoulder__top"></div>
+              <div class="shoulder__bottom"></div>
+            </div>
+            <div class="upper">
+              <div class="upper__front"></div>
+              <div class="upper__back"></div>
+              <div class="upper__right"></div>
+              <div class="upper__left"></div>
+              <div class="upper__top"></div>
+              <div class="upper__bottom"></div>
+            </div>
+            <div class="elbow">
+              <div class="lower">
+                <div class="lower__front"></div>
+                <div class="lower__back"></div>
+                <div class="lower__right"></div>
+                <div class="lower__left"></div>
+                <div class="lower__top"></div>
+                <div class="lower__bottom"></div>
+              </div>
+            </div>
+          </div>
+          <div class="arm__right">
+            <div class="shoulder">
+              <div class="shoulder__front"></div>
+              <div class="shoulder__back"></div>
+              <div class="shoulder__right"></div>
+              <div class="shoulder__left"></div>
+              <div class="shoulder__top"></div>
+              <div class="shoulder__bottom"></div>
+            </div>
+            <div class="upper">
+              <div class="upper__front"></div>
+              <div class="upper__back"></div>
+              <div class="upper__right"></div>
+              <div class="upper__left"></div>
+              <div class="upper__top"></div>
+              <div class="upper__bottom"></div>
+            </div>
+            <div class="elbow">
+              <div class="lower">
+                <div class="lower__front"></div>
+                <div class="lower__back"></div>
+                <div class="lower__right"></div>
+                <div class="lower__left"></div>
+                <div class="lower__top"></div>
+                <div class="lower__bottom"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="neck">
+          <div class="helmet">
+            <div class="helmet__front"></div>
+            <div class="helmet__back"></div>
+            <div class="helmet__right"></div>
+            <div class="helmet__left"></div>
+            <div class="helmet__top"></div>
+            <div class="helmet__bottom"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const style = document.createElement('style');
+      style.innerHTML = `
+      * {
+        box-sizing: border-box;
+        position: absolute;
+        transform-style: preserve-3d;
+        backface-visibility: inherit;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      `;
+
+      const volumes = {
+        // thigh: [2.5, 2.5, 2.5, 2.5, 14, 2],
+        // calf: [2, 2, 2, 2, 15, 1],
+        // foot: [2, 6, 2, 2, 0, 2],
+        // torso: [5, 5, 6, 6, 1, 19],
+        // upper: [2, 2, 2, 2, 10, 2],
+        // lower: [1.5, 1.5, 1.5, 1.5, 10, 2],
+        // helmet: [6, 6, 6, 6, 0, 12],
+        torso: [50, 50, 60, 60, 10, 190],
+        thigh: [25, 25, 25, 25, 140, 20],
+        calf: [20, 20, 20, 20, 150, 10],
+        foot: [60, 20, 20, 20, 0, 20],
+        shoulder: [30, 30, 30, 30, 30, 30],
+        upper: [20, 20, 20, 20, 100, 20],
+        lower: [15, 15, 15, 15, 100, 20],
+        helmet: [50, 50, 50, 50, 0, 100],
+      };
+
+      const parts = Object.keys(volumes);
+      const faces = ['back', 'front', 'left', 'right', 'bottom', 'top'];
+      let sign = -1;
+      for (const part of parts) {
+        for (const face of faces) {
+          let index = faces.indexOf(face);
+          if (index < 2) {
+            style.innerHTML += `.${part}__${face} {
+              left: -${volumes[part][2]}px;
+              top: -${volumes[part][5]}px;
+              width: ${volumes[part][2] + volumes[part][3]}px;
+              height: ${volumes[part][4] + volumes[part][5]}px;
+              transform: rotateY(${index === 1 ? 180 : 0}deg) translateZ(${
+              volumes[part][index]
+            }px);
+              background-image: radial-gradient(
+                farthest-corner at 0 0, red 0%, purple 100%
+              );
+            }
+            `;
+          } else if (index < 4) {
+            style.innerHTML += `.${part}__${face} {
+              left: -${(volumes[part][0] + volumes[part][1]) / 2}px;
+              top: -${volumes[part][5]}px;
+              width: ${volumes[part][0] + volumes[part][1]}px;
+              height: ${volumes[part][4] + volumes[part][5]}px;
+              transform: rotateY(${sign * 90}deg) translate3D(${
+              (sign * (volumes[part][1] - volumes[part][0])) / 2
+            }px,0,${volumes[part][index]}px);
+            background-image: radial-gradient(
+                farthest-corner at 0 0, lightgray 0%, black 100%
+              );
+            }
+            `;
+          } else {
+            style.innerHTML += `.${part}__${face} {
+              left: -${volumes[part][2]}px;
+              top: -${(volumes[part][0] + volumes[part][1]) / 2}px;
+              width: ${volumes[part][2] + volumes[part][3]}px;
+              height: ${volumes[part][0] + volumes[part][1]}px;
+              transform: rotateX(${sign * 90}deg) translate3D(0, ${
+              (sign * (volumes[part][0] - volumes[part][1])) / 2
+            }px,${volumes[part][index]}px);
+            background-image: radial-gradient(
+                farthest-corner at 0 0, lightblue 0%, darkblue 100%
+              );
+            }
+            `;
+          }
+          sign = -sign;
+        }
+      }
+
+      style.innerHTML += `
+      .floor {
+        left: 300px;
+        top: 500px;
+        width: 200px;
+        height: 300px;
+        background: lightblue;
+        perspective: 10000px;
+        transform: rotateX(45deg) rotateZ(45deg);
+      }
+      .waist {
+        transform: translateZ(300px) rotateX(-90deg);
+      }
+      .leg__left {
+        transform: translateX(30px);
+      }
+      .leg__right {
+        transform: translateX(-30px);
+      }
+      .knee {
+        transform: translateY(140px);
+      }
+      .foot {
+        transform: translateY(160px);
+      }
+      .pads {
+        transform: translateY(-160px);
+      }
+      .arm__left {
+        transform: translateX(80px);
+      }
+      .arm__right {
+        transform: translateX(-80px);
+      }
+      .elbow {
+        transform: translateY(120px);
+      }
+      .neck {
+        transform: translateY(-200px);
+      }
+      `;
+      document.head.appendChild(style);
+
+      const animation = document.createElement('style');
+      animation.innerHTML = `
+      .floor {
+        animation 15s infinite rotate;
+      }
+      .arm__right {
+        transform: translateX(-80px);
+        animation: 1s infinite alternate swing;
+      }
+      @keyframes swing {
+        33% {
+          transform: translateX(-80px) rotateX(45deg);
+        }
+        50% {
+          transform: translateX(-80px);
+        }
+        66% {
+          transform: translateX(-80px) rotateX(-45deg);
+        }
+      }
+      `;
+      document.body.appendChild(animation);
+    </script>
+  </body>
+</html>

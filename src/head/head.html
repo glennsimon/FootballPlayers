@@ -1,23 +1,16 @@
 <html>
-  <head>
-    <script>
-      let tokenData = {
-        hash: '0xb7d76e4c11223344943aad34556677440044444444444444db3a0f8180147bbf',
-        tokenId: '8000976',
-      };
-    </script>
-  </head>
+  <head> </head>
   <body>
     <div id="container" class="output large hidden">
       <div id="floor" class="floor">
         <div id="element-datum0" class="element-datum">
           <div id="cubic-element0" class="cubic-element">
-            <div class="face front">1</div>
-            <div class="face back">2</div>
-            <div class="face right">3</div>
-            <div class="face left">4</div>
-            <div class="face top">5</div>
-            <div class="face bottom">6</div>
+            <div class="helmet front">1</div>
+            <div class="helmet back">2</div>
+            <div class="helmet right">3</div>
+            <div class="helmet left">4</div>
+            <div class="helmet top">5</div>
+            <div class="helmet bottom">6</div>
           </div>
         </div>
       </div>
@@ -45,7 +38,7 @@ body {
   width: 100%;
   height: 100%;
   // background: linear-gradient(skyblue,khaki);
-  perspective: 55px;
+  perspective: 1095px;
 }
 .element-datum {
   width: ${boundingSphereRad}px;
@@ -67,7 +60,7 @@ body {
 #cubic-element0 {
   animation: element-rot0 5s linear infinite;
 }
-.face {
+.helmet {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -104,8 +97,6 @@ body {
   transform: rotateX(-90deg) translateZ(5px);
 }
 @keyframes element-rot0 { 
-  // 50% { transform: rotate3d(1, 1, 1, 180deg) }
-  // 100% { transform: rotate3d(1, 1, 1, 360deg) }
   to { transform: rotate3d(1, 1, 0, 360deg) }
 }`;
 
@@ -135,33 +126,6 @@ body {
       const myTop = (y) => {
         return h - e + (s * e) / (d + Ly - y); // b + h + e + s*tan(phi)
       };
-      // const canvas = document.getElementById('canvas');
-      // const canvasContext = canvas.getContext('2d');
-      // canvasContext.strokeRect(200, 0, 600, 600);
-      // canvasContext.beginPath();
-      // let x = 0;
-      // let y = 0;
-      // canvasContext.moveTo(left(x, y), myTop(y));
-      // x = Lx;
-      // canvasContext.lineTo(left(x, y), myTop(y));
-      // y = Ly;
-      // canvasContext.lineTo(left(x, y), myTop(y));
-      // x = 0;
-      // canvasContext.lineTo(left(x, y), myTop(y));
-      // y = 0;
-      // canvasContext.lineTo(left(x, y), myTop(y));
-      // canvasContext.stroke();
-
-      // const varValues = document.getElementById('varValues');
-      // varValues.innerHTML = `
-      // w: ${Math.round(w)}
-      // h: ${Math.round(h)}
-      // s: ${Math.round(s)}
-      // d: ${Math.round(d)}
-      // e: ${Math.round(e)}
-      // Lx: ${Math.round(Lx)}
-      // Ly: ${Math.round(Ly)}
-      // `;
     </script>
   </body>
 </html>
