@@ -7,14 +7,15 @@
       <button onclick="run()">RUN</button>
     </div>
     <div class="floor">
+      <div class="field"></div>
       <div class="waist">
         <div class="torso">
-          <div class="torso__front"></div>
-          <div class="torso__back"></div>
-          <div class="torso__right"></div>
-          <div class="torso__left"></div>
-          <div class="torso__top"></div>
-          <div class="torso__bottom"></div>
+          <div class="face torso__front">7</div>
+          <div class="face torso__back">7</div>
+          <div class="face torso__right">7</div>
+          <div class="face torso__left">7</div>
+          <div class="face torso__top">7</div>
+          <div class="face torso__bottom">7</div>
         </div>
         <div class="leg__left">
           <div class="thigh">
@@ -132,17 +133,38 @@
         </div>
         <div class="neck">
           <div class="helmet">
-            <div class="helmet__front"></div>
-            <div class="helmet__back"></div>
-            <div class="helmet__right"></div>
-            <div class="helmet__left"></div>
-            <div class="helmet__top"></div>
-            <div class="helmet__bottom"></div>
+            <div class="helmet__wall"></div>
+            <div class="helmet__face helmet__front"></div>
+            <div class="helmet__face helmet__back"></div>
+            <div class="face helmet__face helmet__right">S</div>
+            <div class="face helmet__face helmet__left">S</div>
+            <div class="helmet__face helmet__top"></div>
+            <div class="helmet__face helmet__bottom"></div>
           </div>
         </div>
       </div>
     </div>
     <script>
+      const volumes = {
+        torso: [10, 190, 60, 60, 50, 50],
+        thigh: [140, 20, 25, 25, 25, 25],
+        calf: [150, 10, 20, 20, 20, 20],
+        foot: [0, 20, 20, 20, 60, 20],
+        shoulder: [30, 30, 30, 30, 30, 30],
+        upper: [110, 10, 20, 20, 20, 20],
+        lower: [100, 20, 15, 15, 15, 15],
+        helmet: [0, 100, 50, 50, 50, 50],
+      };
+
+      const offsets = {
+        waist: 300,
+        knee: -140,
+        foot: -160,
+        pads: 160,
+        elbow: -120,
+        neck: 200,
+      };
+
       const style = document.createElement('style');
       style.innerHTML = `
       * {
@@ -155,12 +177,44 @@
         margin: 0;
         padding: 0;
       }
+      .face {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backface-visibility: inherit;
+        font-size: 20px;
+        color: white;
+      }
       .buttons {
         display: flex;
         flex-direction: column;
       }
       button {
         position: static;
+      }
+      .floor {
+        left: 300px;
+        top: 500px;
+        perspective: 100000px;
+        animation: 15s linear infinite rotate15;
+      }
+      .field {
+        left: -100px;
+        top: -150px;
+        width: 200px;
+        height: 300px;
+        background: green;
+      }
+      .helmet__face {
+        clip-path: polygon(30px 0px, ${volumes.helmet[2] - 30}px 0px,
+        ${volumes.helmet[2]}px 30px,
+        ${volumes.helmet[2]}px ${volumes.helmet[2] - 30}px,
+        ${volumes.helmet[2] - 30}px ${volumes.helmet[2]}px,
+        30px ${volumes.helmet[2]}px,
+        0px ${volumes.helmet[2] - 30}px, 0px 30px, 30px 0px);
+      }
+      @keyframes fieldMotion {
+        to {transform: translateY(-600px);}
       }
       @keyframes rotate15 {
         from {transform: rotateX(45deg)}
@@ -206,30 +260,19 @@
       }
       `;
 
-      const volumes = {
-        torso: [50, 50, 60, 60, 10, 190],
-        thigh: [25, 25, 25, 25, 140, 20],
-        calf: [20, 20, 20, 20, 150, 10],
-        foot: [60, 20, 20, 20, 0, 20],
-        shoulder: [30, 30, 30, 30, 30, 30],
-        upper: [20, 20, 20, 20, 110, 10],
-        lower: [15, 15, 15, 15, 100, 20],
-        helmet: [50, 50, 50, 50, 0, 100],
-      };
-
       const parts = Object.keys(volumes);
-      const faces = ['back', 'front', 'left', 'right', 'bottom', 'top'];
-      let sign = -1;
+      const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
+      let sign = 1;
       for (const part of parts) {
         for (const face of faces) {
           let index = faces.indexOf(face);
           if (index < 2) {
             style.innerHTML += `.${part}__${face} {
-              left: -${volumes[part][2]}px;
-              top: -${volumes[part][5]}px;
+              left: ${-volumes[part][2]}px;
+              top: ${-volumes[part][5]}px;
               width: ${volumes[part][2] + volumes[part][3]}px;
               height: ${volumes[part][4] + volumes[part][5]}px;
-              transform: rotateY(${index === 1 ? 180 : 0}deg) translateZ(${
+              transform: rotateY(${index === 1 ? 0 : 180}deg) translateZ(${
               volumes[part][index]
             }px);
               background-image: radial-gradient(
@@ -239,31 +282,58 @@
             `;
           } else if (index < 4) {
             style.innerHTML += `.${part}__${face} {
-              left: -${(volumes[part][0] + volumes[part][1]) / 2}px;
-              top: -${volumes[part][5]}px;
-              width: ${volumes[part][0] + volumes[part][1]}px;
-              height: ${volumes[part][4] + volumes[part][5]}px;
-              transform: rotateY(${sign * 90}deg) translate3D(${
-              (sign * (volumes[part][1] - volumes[part][0])) / 2
-            }px,0,${volumes[part][index]}px);
+              left: ${
+                (volumes[part][3] -
+                  volumes[part][2] -
+                  volumes[part][4] -
+                  volumes[part][5]) /
+                2
+              }px;
+              top: ${
+                (volumes[part][4] -
+                  volumes[part][5] -
+                  volumes[part][1] -
+                  volumes[part][0]) /
+                2
+              }px;
+              width: ${volumes[part][4] + volumes[part][5]}px;
+              height: ${volumes[part][0] + volumes[part][1]}px;
+              transform: translateZ(${
+                (volumes[part][1] - volumes[part][0]) / 2
+              }px) rotateX(-90deg) rotateY(${
+              index === 3 ? -90 : 90
+            }deg) translateZ(${(volumes[part][2] + volumes[part][3]) / 2}px);
             background-image: radial-gradient(
                 farthest-corner at 0 0, lightgray 0%, black 100%
-              );
+              ) ;
             }
             `;
           } else {
             style.innerHTML += `.${part}__${face} {
-              left: -${volumes[part][2]}px;
-              top: -${(volumes[part][0] + volumes[part][1]) / 2}px;
+              left: ${-volumes[part][2]}px;
+              top: ${
+                (volumes[part][4] -
+                  volumes[part][5] -
+                  volumes[part][1] -
+                  volumes[part][0]) /
+                2
+              }px;
               width: ${volumes[part][2] + volumes[part][3]}px;
               height: ${volumes[part][0] + volumes[part][1]}px;
-              transform: rotateX(${sign * 90}deg) translate3D(0, ${
-              (sign * (volumes[part][0] - volumes[part][1])) / 2
-            }px,${volumes[part][index]}px);
+              transform: translateZ(${
+                (volumes[part][1] - volumes[part][0]) / 2
+              }px) rotateX(-90deg) rotateY(${
+              index === 4 ? 0 : 180
+            }deg) translateZ(${(volumes[part][4] + volumes[part][5]) / 2}px);
             background-image: radial-gradient(
-                farthest-corner at 0 0, lightblue 0%, darkblue 100%
-              );
-            }
+              farthest-corner at 0 0, lightblue 0%, darkblue 100%
+              ) ;
+            //   transform: translate3D(0, ${sign * volumes[part][index]}px,
+            // ${(volumes[part][1] - volumes[part][0]) / 2}px) rotateX(-90deg) ;
+            // background-image: radial-gradient(
+            //     farthest-corner at 0 0, lightblue 0%, darkblue 100%
+            //   );
+            // }
             `;
           }
           sign = -sign;
@@ -271,17 +341,8 @@
       }
 
       style.innerHTML += `
-      .floor {
-        left: 300px;
-        top: 500px;
-        perspective: 10000px;
-        animation: 15s linear infinite rotate15;
-        // width: 200px;
-        // height: 300px;
-        // background: lightblue;
-      }
       .waist {
-        transform: translateZ(300px) rotateX(-90deg);
+        transform: translateZ(${offsets.waist}px);
       }
       .leg__left {
         left: 30px;
@@ -290,13 +351,13 @@
         left: -30px;
       }
       .knee {
-        top: 140px;
+        transform: translateZ(${offsets.knee}px);
       }
       .foot {
-        top: 160px;
+        transform: translateZ(${offsets.foot}px);
       }
       .pads {
-        top: -160px;
+        transform: translateZ(${offsets.pads}px);
       }
       .arm__left {
         left: 80px;
@@ -305,10 +366,10 @@
         left: -80px;
       }
       .elbow {
-        top: 120px;
+        transform: translateZ(${offsets.elbow}px);
       }
       .neck {
-        top: -200px;
+        transform: translateZ(${offsets.neck}px);
       }
       `;
       document.head.appendChild(style);
@@ -321,6 +382,10 @@
 
       function walk() {
         animation.innerHTML = `
+        .field {
+          animation: fieldMotion 3s linear infinite;
+          background:
+        }
       .arm__right {
         animation: 1s 0.5s infinite linear swing45;
       }
