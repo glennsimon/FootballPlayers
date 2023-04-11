@@ -10,12 +10,12 @@
       <div class="field"></div>
       <div class="waist">
         <div class="torso">
-          <div class="face torso__front">7</div>
-          <div class="face torso__back">7</div>
-          <div class="face torso__right">7</div>
-          <div class="face torso__left">7</div>
-          <div class="face torso__top">7</div>
-          <div class="face torso__bottom">7</div>
+          <div class="face torso__front">88</div>
+          <div class="face torso__back">88</div>
+          <div class="face torso__right"></div>
+          <div class="face torso__left"></div>
+          <div class="face torso__top"></div>
+          <div class="face torso__bottom"></div>
         </div>
         <div class="leg__left">
           <div class="thigh">
@@ -172,6 +172,7 @@
         position: absolute;
         transform-style: preserve-3d;
         backface-visibility: inherit;
+        font-family: fantasy;
       }
       body {
         margin: 0;
@@ -182,7 +183,7 @@
         justify-content: center;
         align-items: center;
         backface-visibility: inherit;
-        font-size: 20px;
+        font-size: 40px;
         color: white;
       }
       .buttons {
@@ -205,13 +206,39 @@
         height: 300px;
         background: green;
       }
+      .torso div {
+        font-size: 100px;
+        background: red;
+      }
+      .shoulder div {
+        background: red;
+      }
+      .helmet div {
+        color: red;
+        background: white;
+      }
+      .thigh div {
+        background: white;
+      }
+      .calf div {
+        background: white;
+      }
+      .foot div {
+        background: black;
+      }
+      .upper div {
+        background: brown;
+      }
+      .lower div {
+        background: brown;
+      }
       .helmet__face {
-        clip-path: polygon(30px 0px, ${volumes.helmet[2] - 30}px 0px,
-        ${volumes.helmet[2]}px 30px,
-        ${volumes.helmet[2]}px ${volumes.helmet[2] - 30}px,
-        ${volumes.helmet[2] - 30}px ${volumes.helmet[2]}px,
-        30px ${volumes.helmet[2]}px,
-        0px ${volumes.helmet[2] - 30}px, 0px 30px, 30px 0px);
+        clip-path: polygon(30px 0px, ${volumes.helmet[1] - 30}px 0px,
+        ${volumes.helmet[1]}px 30px,
+        ${volumes.helmet[1]}px ${volumes.helmet[1] - 30}px,
+        ${volumes.helmet[1] - 30}px ${volumes.helmet[1]}px,
+        30px ${volumes.helmet[1]}px,
+        0px ${volumes.helmet[1] - 30}px, 0px 30px, 30px 0px);
       }
       @keyframes fieldMotion {
         to {transform: translateY(-600px);}
@@ -238,23 +265,22 @@
       }
       @keyframes kneeSwingWalk {
         66% {
-          transform: rotateX(-30deg);
+          transform: translateZ(${offsets.knee}px) rotateX(-30deg);
         }
       }
       @keyframes kneeSwingRun {
         66% {
-          transform: rotateX(-90deg);
+          transform: translateZ(${offsets.knee}px) rotateX(-90deg);
         }
       }
       @keyframes elbows30 {
         to {
-          transform: rotateX(30deg);
-          animation-timing-function: ease-in;
+          transform: translateZ(${offsets.elbow}px) rotateX(30deg);
         }
       }
       @keyframes elbows90 {
         to {
-          transform: rotateX(90deg);
+          transform: translateZ(${offsets.elbow}px) rotateX(90deg);
           animation-timing-function: ease-in;
         }
       }
@@ -262,7 +288,6 @@
 
       const parts = Object.keys(volumes);
       const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
-      let sign = 1;
       for (const part of parts) {
         for (const face of faces) {
           let index = faces.indexOf(face);
@@ -275,9 +300,6 @@
               transform: rotateY(${index === 1 ? 0 : 180}deg) translateZ(${
               volumes[part][index]
             }px);
-              background-image: radial-gradient(
-                farthest-corner at 0 0, red 0%, purple 100%
-              );
             }
             `;
           } else if (index < 4) {
@@ -303,9 +325,6 @@
               }px) rotateX(-90deg) rotateY(${
               index === 3 ? -90 : 90
             }deg) translateZ(${(volumes[part][2] + volumes[part][3]) / 2}px);
-            background-image: radial-gradient(
-                farthest-corner at 0 0, lightgray 0%, black 100%
-              ) ;
             }
             `;
           } else {
@@ -320,23 +339,14 @@
               }px;
               width: ${volumes[part][2] + volumes[part][3]}px;
               height: ${volumes[part][0] + volumes[part][1]}px;
-              transform: translateZ(${
-                (volumes[part][1] - volumes[part][0]) / 2
-              }px) rotateX(-90deg) rotateY(${
-              index === 4 ? 0 : 180
-            }deg) translateZ(${(volumes[part][4] + volumes[part][5]) / 2}px);
-            background-image: radial-gradient(
-              farthest-corner at 0 0, lightblue 0%, darkblue 100%
-              ) ;
-            //   transform: translate3D(0, ${sign * volumes[part][index]}px,
-            // ${(volumes[part][1] - volumes[part][0]) / 2}px) rotateX(-90deg) ;
-            // background-image: radial-gradient(
-            //     farthest-corner at 0 0, lightblue 0%, darkblue 100%
-            //   );
-            // }
+              transform: translateZ(
+              ${(volumes[part][1] - volumes[part][0]) / 2}px) 
+              rotateX(-90deg) rotateY(
+                ${index === 4 ? 0 : 180}deg) 
+                translateZ(${(volumes[part][4] + volumes[part][5]) / 2}px);
+            }
             `;
           }
-          sign = -sign;
         }
       }
 
@@ -382,10 +392,10 @@
 
       function walk() {
         animation.innerHTML = `
-        .field {
-          animation: fieldMotion 3s linear infinite;
-          background:
-        }
+        // .field {
+        //   animation: fieldMotion 3s linear infinite;
+        //   background:
+        // }
       .arm__right {
         animation: 1s 0.5s infinite linear swing45;
       }
