@@ -10,12 +10,15 @@
       <div class="field"></div>
       <div class="waist">
         <div class="torso">
-          <div class="face torso__front">88</div>
-          <div class="face torso__back">88</div>
-          <div class="face torso__right"></div>
-          <div class="face torso__left"></div>
-          <div class="face torso__top"></div>
-          <div class="face torso__bottom"></div>
+          <div class="surface__text torso__front">88</div>
+          <div class="torso__back">
+            <div class="surface__text name">FLINTSTONE</div>
+            <div class="surface__text number">88</div>
+          </div>
+          <div class="torso__right"></div>
+          <div class="torso__left"></div>
+          <div class="torso__top"></div>
+          <div class="torso__bottom"></div>
         </div>
         <div class="leg__left">
           <div class="thigh">
@@ -132,27 +135,37 @@
           </div>
         </div>
         <div class="neck">
+          <div class="head">
+            <div class="head__front">
+              <div class="eyes">@&nbsp;&nbsp;&nbsp;@</div>
+              <div class="mouth">|+|+|+|</div>
+            </div>
+            <div class="head__right"></div>
+            <div class="head__left"></div>
+            <div class="head__bottom"></div>
+          </div>
           <div class="helmet">
-            <div class="helmet__wall"></div>
-            <div class="helmet__face helmet__front"></div>
-            <div class="helmet__face helmet__back"></div>
-            <div class="face helmet__face helmet__right">S</div>
-            <div class="face helmet__face helmet__left">S</div>
-            <div class="helmet__face helmet__top"></div>
-            <div class="helmet__face helmet__bottom"></div>
+            <div class="shield__top"></div>
+            <div class="shield__back"></div>
+            <div class="helmet__trim helmet__back"></div>
+            <div class="surface__text helmet__trim helmet__right">S</div>
+            <div class="surface__text helmet__trim helmet__left">S</div>
+            <div class="helmet__trim helmet__top"></div>
           </div>
         </div>
       </div>
     </div>
     <script>
+      // const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
       const volumes = {
-        torso: [10, 190, 60, 60, 50, 50],
+        torso: [10, 190, 60, 60, 45, 45],
         thigh: [140, 20, 25, 25, 25, 25],
         calf: [150, 10, 20, 20, 20, 20],
         foot: [0, 20, 20, 20, 60, 20],
         shoulder: [30, 30, 30, 30, 30, 30],
         upper: [110, 10, 20, 20, 20, 20],
         lower: [100, 20, 15, 15, 15, 15],
+        head: [5, 65, 35, 35, 40, 40],
         helmet: [0, 100, 50, 50, 50, 50],
       };
 
@@ -163,6 +176,7 @@
         pads: 160,
         elbow: -120,
         neck: 200,
+        corner: 30,
       };
 
       const style = document.createElement('style');
@@ -177,8 +191,9 @@
       body {
         margin: 0;
         padding: 0;
+        background: lightgray;
       }
-      .face {
+      .surface__text {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -210,12 +225,38 @@
         font-size: 100px;
         background: red;
       }
+      .torso__back {
+        display: flex;
+        flex-direction: column;
+      }
+      .torso__back .name {
+        font-size: 20px;
+        position: static;
+        margin: auto;
+      }
+      .torso__back .number {
+        position: static;
+        margin: auto;
+      }
       .shoulder div {
         background: red;
+      }
+      .head div {
+        background: Sienna;
       }
       .helmet div {
         color: red;
         background: white;
+      }
+      .shield__top {
+        left: ${-volumes.helmet[3]}px;
+        top: ${-volumes.helmet[5]}px;
+        width: ${volumes.helmet[1]}px;
+        height: ${volumes.helmet[1]}px;
+        transform: translateZ(${volumes.helmet[1] - offsets.corner}px)
+      }
+      .shield__back {
+        transform: translateY(${volumes.helmet[5] - offsets.corner}px)
       }
       .thigh div {
         background: white;
@@ -227,18 +268,39 @@
         background: black;
       }
       .upper div {
-        background: brown;
+        background: Sienna;
       }
       .lower div {
-        background: brown;
+        background: Sienna;
       }
-      .helmet__face {
-        clip-path: polygon(30px 0px, ${volumes.helmet[1] - 30}px 0px,
-        ${volumes.helmet[1]}px 30px,
-        ${volumes.helmet[1]}px ${volumes.helmet[1] - 30}px,
-        ${volumes.helmet[1] - 30}px ${volumes.helmet[1]}px,
-        30px ${volumes.helmet[1]}px,
-        0px ${volumes.helmet[1] - 30}px, 0px 30px, 30px 0px);
+      .head__front {
+        display: flex;
+        flex-direction: column;
+      }
+      .eyes {
+        position: static;
+        margin: auto;
+        color: black;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .mouth {
+        position: static;
+        margin: auto;
+        color: white;
+        font-weight: bold;
+      }
+      .helmet__trim {
+        clip-path: polygon(${offsets.corner}px 0px, ${
+        volumes.helmet[1] - offsets.corner
+      }px 0px,
+        ${volumes.helmet[1]}px ${offsets.corner}px,
+        ${volumes.helmet[1]}px ${volumes.helmet[1] - offsets.corner}px,
+        ${volumes.helmet[1] - offsets.corner}px ${volumes.helmet[1]}px,
+        ${offsets.corner}px ${volumes.helmet[1]}px,
+        0px ${volumes.helmet[1] - offsets.corner}px, 0px ${offsets.corner}px, ${
+        offsets.corner
+      }px 0px);
       }
       @keyframes fieldMotion {
         to {transform: translateY(-600px);}
