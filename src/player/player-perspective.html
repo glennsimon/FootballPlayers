@@ -5,9 +5,14 @@
       <button onclick="stand()">STAND</button>
       <button onclick="walk()">WALK</button>
       <button onclick="run()">RUN</button>
+      <button onclick="flip()">FLIP</button>
     </div>
+    <div class="outline"></div>
     <div class="floor">
-      <div class="field"></div>
+      <div class="field">
+        <div class="center-dot"></div>
+        <div class="fifty"></div>
+      </div>
       <div class="waist">
         <div class="torso">
           <div class="surface__text torso__front">88</div>
@@ -138,7 +143,7 @@
           <div class="head">
             <div class="head__front">
               <div class="eyes">@&nbsp;&nbsp;&nbsp;@</div>
-              <div class="mouth">|+|+|+|</div>
+              <div class="mouth">XXXX</div>
             </div>
             <div class="head__right"></div>
             <div class="head__left"></div>
@@ -179,18 +184,23 @@
         corner: 30,
       };
 
-      const fieldPos = [2040, 960, 0];
+      const fieldWidth = 2040;
+      const fieldHeight = 920;
       const playerPos = [320, 320, 0];
       const camPos = [fieldWidth / 2, fieldHeight / 2 + 640, 200];
-      const objectivePos = [(camPos[0] + playerPos[0]) / 2, playerPos[1], 8];
-      const delta = [
-        (camPos[0] - objectivePos[0]) / 2,
-        camPos[1] - objectivePos[1],
-        camPos[2] - objectivePos[2],
+      const objectivePos = [
+        (fieldWidth / 2 + playerPos[0]) / 2,
+        (fieldHeight / 2 + playerPos[1]) / 2,
+        8,
       ];
-      let distance = delta[0] ^ (2 + delta[1]) ^ (2 + delta[2]) ^ 2 ^ 0.5;
-      let theta = Math.atan(delta[0] / delta[1]);
-      let psi = Math.atan((delta[2] / (delta[1] ^ (2 + delta[2]) ^ 2)) ^ 0.5);
+      const delta = camPos.map((item, index) => {
+        return item - objectivePos[index];
+      });
+      let distance = (delta[0] ** 2 + delta[1] ** 2 + delta[2] ** 2) ** 0.5;
+      let theta = (180 * Math.atan(delta[0] / delta[1])) / Math.PI;
+      let psi =
+        (180 * Math.atan(delta[2] / (delta[0] ** 2 + delta[1] ** 2) ** 0.5)) /
+        Math.PI;
 
       const style = document.createElement('style');
       style.innerHTML = `
@@ -206,11 +216,21 @@
         padding: 0;
         background: lightgray;
       }
+      .floor {
+        left: 0;
+        top: 0;
+        width: 0px;
+        height: 0px;
+        transform-origin: ${objectivePos[0]}px ${objectivePos[1]}px;
+        transform: perspective(${distance}px) rotateX(${
+        90 - psi
+      }deg) rotateZ(${theta}deg) translate3d(0px, 0px, 0px);
+      }
       .surface__text {
         display: flex;
         justify-content: center;
         align-items: center;
-        backface-visibility: inherit;
+        backface-visibility: none;
         font-size: 40px;
         color: white;
       }
@@ -221,22 +241,36 @@
       button {
         position: static;
       }
-      .floor {
-        left: 1020px;
-        top: 460px;
-        transform: matrix3d(1,0,0,0,
-                            0,1,0,0,
-                            0,0,1,0,
-                            0,0,0,1);
-        // animation: 15s linear infinite rotate15;
-        // perspective: 100000px;
+      .outline {
+        left: 0px;
+        top: 0px;
+        width: 2040px;
+        height: 920px;
       }
       .field {
-        left: -320px;
-        top: -320px;
+        left: 0px;
+        top: 0px;
         width: 2040px;
         height: 920px;
         background: green;
+      }
+      .waist {
+        left: ${playerPos[0]}px;
+        top: ${playerPos[1]}px;
+      }
+      .center-dot {
+        left: ${objectivePos[0] - 5}px;
+        top: ${objectivePos[1] - 5}px;
+        width: 10px;
+        height: 10px;
+        background: white;
+      }
+      .fifty {
+        left: 1020px;
+        top: 0px;
+        width: 10px;
+        height: 920px;
+        background: white;
       }
       .torso div {
         font-size: 100px;
@@ -361,6 +395,14 @@
         to {
           transform: translateZ(${offsets.elbow}px) rotateX(90deg);
           animation-timing-function: ease-in;
+        }
+      }
+      @keyframes flip {
+        from {
+          transform rotateX(0deg);
+        }
+        to {
+          transform: rotateX(360deg);
         }
       }
       `;
@@ -515,6 +557,14 @@
       }
       .elbow {
         animation: 0.5s forwards elbows90;
+      }
+      `;
+      }
+
+      function flip() {
+        animation.innerHTML = `
+      .torso {
+        animation: 1s forwards flip;
       }
       `;
       }
