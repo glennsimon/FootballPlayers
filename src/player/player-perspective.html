@@ -10,8 +10,7 @@
     <div class="outline"></div>
     <div class="floor">
       <div class="field">
-        <div class="center-dot"></div>
-        <div class="fifty"></div>
+        <div class="field-objective"></div>
       </div>
       <div class="waist">
         <div class="torso">
@@ -186,6 +185,38 @@
 
       const fieldWidth = 2040;
       const fieldHeight = 920;
+      let playerVector = [320, 320, 0];
+      let objectiveVector = [
+        (fieldWidth / 2 + playerVector[0]) / 2,
+        (fieldHeight / 2 + playerVector[1]) / 2,
+        8,
+      ];
+      const cameraVector = [fieldWidth / 2, fieldHeight / 2 + 640, 200];
+      let sightlineVector = cameraVector.map((item, index) => {
+        return item - objectiveVector[index];
+      });
+      let sightlineDistance =
+        (sightlineVector[0] ** 2 +
+          sightlineVector[1] ** 2 +
+          sightlineVector[2] ** 2) **
+        0.5;
+      let sightUnitVector = sightlineVector.map((item, index) => {
+        return item / sightlineDistance;
+      });
+      const fieldUnitVector = [0, 0, 1];
+      let transformVector = sightUnitVector.map((item, index) => {
+        return item - fieldUnitVector[index];
+      });
+      let newPsi =
+        (180 *
+          Math.atan(
+            sightlineVector[2] /
+              (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
+          )) /
+        Math.PI;
+      let newTheta =
+        (180 * Math.atan(sightlineVector[0] / sightlineVector[1])) / Math.PI;
+
       const playerPos = [320, 320, 0];
       const camPos = [fieldWidth / 2, fieldHeight / 2 + 640, 200];
       const objectivePos = [
@@ -201,6 +232,9 @@
       let psi =
         (180 * Math.atan(delta[2] / (delta[0] ** 2 + delta[1] ** 2) ** 0.5)) /
         Math.PI;
+
+      const holding = `transform-origin: ${cameraVector[0]}px ${cameraVector[1]}px;
+        transform: perspective(${distance}px) translateY(200px) rotateX(${psi}deg) rotateZ(${theta}deg) translate3d(0px, 0px, 0px);`;
 
       const style = document.createElement('style');
       style.innerHTML = `
@@ -221,10 +255,10 @@
         top: 0;
         width: 0px;
         height: 0px;
-        transform-origin: ${objectivePos[0]}px ${objectivePos[1]}px;
-        transform: perspective(${distance}px) rotateX(${
-        90 - psi
-      }deg) rotateZ(${theta}deg) translate3d(0px, 0px, 0px);
+        transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
+        transform: perspective(${sightlineDistance}px) rotateX(${
+        90 - newPsi
+      }deg) rotateZ(${newTheta}deg) ;
       }
       .surface__text {
         display: flex;
@@ -252,25 +286,22 @@
         top: 0px;
         width: 2040px;
         height: 920px;
-        background: green;
+        background: center / contain no-repeat url('./field.jpg');
       }
       .waist {
-        left: ${playerPos[0]}px;
-        top: ${playerPos[1]}px;
+        left: ${playerVector[0]}px;
+        top: ${playerVector[1]}px;
       }
-      .center-dot {
-        left: ${objectivePos[0] - 5}px;
-        top: ${objectivePos[1] - 5}px;
-        width: 10px;
-        height: 10px;
+      .field-objective {
+        left: ${objectiveVector[0] - 10}px;
+        top: ${objectiveVector[1] - 10}px;
+        width: 20px;
+        height: 20px;
         background: white;
-      }
-      .fifty {
-        left: 1020px;
-        top: 0px;
-        width: 10px;
-        height: 920px;
-        background: white;
+        clip-path: polygon(
+          9px 0, 11px 0, 11px 9px, 20px 9px, 20px 11px,
+          11px 11px, 11px 20px, 9px 20px, 9px 11px, 0px 11px,
+          0px 9px, 9px 9px, 9px 0 );
       }
       .torso div {
         font-size: 100px;
