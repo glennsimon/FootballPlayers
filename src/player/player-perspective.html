@@ -6,6 +6,10 @@
       <button onclick="walk()">WALK</button>
       <button onclick="run()">RUN</button>
       <button onclick="flip()">FLIP</button>
+      <button onclick="faceNorth()">FACE NORTH</button>
+      <button onclick="faceWest()">FACE WEST</button>
+      <button onclick="faceSouth()">FACE SOUTH</button>
+      <button onclick="faceEast()">FACE EAST</button>
     </div>
     <div class="outline"></div>
     <div class="floor">
@@ -161,37 +165,59 @@
     </div>
     <script>
       // const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
+      // const volumes = {
+      //   torso: [10, 190, 60, 60, 45, 45],
+      //   thigh: [140, 20, 25, 25, 25, 25],
+      //   calf: [150, 10, 20, 20, 20, 20],
+      //   foot: [0, 20, 20, 20, 60, 20],
+      //   shoulder: [30, 30, 30, 30, 30, 30],
+      //   upper: [110, 10, 20, 20, 20, 20],
+      //   lower: [100, 20, 15, 15, 15, 15],
+      //   head: [5, 65, 35, 35, 40, 40],
+      //   helmet: [0, 100, 50, 50, 50, 50],
+      // };
+
       const volumes = {
-        torso: [10, 190, 60, 60, 45, 45],
-        thigh: [140, 20, 25, 25, 25, 25],
-        calf: [150, 10, 20, 20, 20, 20],
-        foot: [0, 20, 20, 20, 60, 20],
-        shoulder: [30, 30, 30, 30, 30, 30],
-        upper: [110, 10, 20, 20, 20, 20],
-        lower: [100, 20, 15, 15, 15, 15],
-        head: [5, 65, 35, 35, 40, 40],
-        helmet: [0, 100, 50, 50, 50, 50],
+        torso: [1, 19, 6, 6, 4.5, 4.5],
+        thigh: [14, 2, 2.5, 2.5, 2.5, 2.5],
+        calf: [15, 1, 2, 2, 2, 2],
+        foot: [0, 2, 2, 2, 6, 2],
+        shoulder: [3, 3, 3, 3, 3, 3],
+        upper: [11, 1, 2, 2, 2, 2],
+        lower: [10, 2, 1.5, 1.5, 1.5, 1.5],
+        head: [0.5, 6.5, 3.5, 3.5, 4, 4],
+        helmet: [0, 10, 5, 5, 5, 5],
       };
 
       const offsets = {
-        waist: 300,
-        knee: -140,
-        foot: -160,
-        pads: 160,
-        elbow: -120,
-        neck: 200,
-        corner: 30,
+        waist: 30,
+        knee: -14,
+        foot: -16,
+        pads: 16,
+        elbow: -12,
+        neck: 20,
+        corner: 3,
+        leg: 3,
+        arm: 8,
       };
 
       const fieldWidth = 2040;
       const fieldHeight = 920;
+      const viewportWidth = 800;
+      const viewportHeight = 450;
+      // let zScale = 2.173;
+      let zScale = 1;
       let playerVector = [320, 320, 0];
       let objectiveVector = [
         (fieldWidth / 2 + playerVector[0]) / 2,
         (fieldHeight / 2 + playerVector[1]) / 2,
-        8,
+        8 * zScale,
       ];
-      const cameraVector = [fieldWidth / 2, fieldHeight / 2 + 640, 200];
+      const cameraVector = [
+        fieldWidth / 2,
+        fieldHeight / 2 + 640,
+        400 * zScale,
+      ];
       let sightlineVector = cameraVector.map((item, index) => {
         return item - objectiveVector[index];
       });
@@ -207,34 +233,24 @@
       let transformVector = sightUnitVector.map((item, index) => {
         return item - fieldUnitVector[index];
       });
-      let newPsi =
+      let psi =
         (180 *
           Math.atan(
             sightlineVector[2] /
               (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
           )) /
         Math.PI;
-      let newTheta =
+      let theta =
         (180 * Math.atan(sightlineVector[0] / sightlineVector[1])) / Math.PI;
 
-      const playerPos = [320, 320, 0];
-      const camPos = [fieldWidth / 2, fieldHeight / 2 + 640, 200];
-      const objectivePos = [
-        (fieldWidth / 2 + playerPos[0]) / 2,
-        (fieldHeight / 2 + playerPos[1]) / 2,
-        8,
-      ];
-      const delta = camPos.map((item, index) => {
-        return item - objectivePos[index];
-      });
-      let distance = (delta[0] ** 2 + delta[1] ** 2 + delta[2] ** 2) ** 0.5;
-      let theta = (180 * Math.atan(delta[0] / delta[1])) / Math.PI;
-      let psi =
-        (180 * Math.atan(delta[2] / (delta[0] ** 2 + delta[1] ** 2) ** 0.5)) /
-        Math.PI;
-
-      const holding = `transform-origin: ${cameraVector[0]}px ${cameraVector[1]}px;
-        transform: perspective(${distance}px) translateY(200px) rotateX(${psi}deg) rotateZ(${theta}deg) translate3d(0px, 0px, 0px);`;
+      const holding = `transform-origin: ${cameraVector[0]}px ${
+        cameraVector[1]
+      }px;
+        transform: perspective(${sightlineDistance}px) translateY(200px) rotateX(${psi}deg) rotateZ(${theta}deg) translate3d(0px, 0px, 0px)
+        left: ${640 - objectiveVector[0]}px;
+        top: ${360 - objectiveVector[1]}px;
+        transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
+        ;`;
 
       const style = document.createElement('style');
       style.innerHTML = `
@@ -251,21 +267,21 @@
         background: lightgray;
       }
       .floor {
-        left: 0;
-        top: 0;
-        width: 0px;
-        height: 0px;
+        left: 0px;
+        top: 0px;
+        width: ${viewportWidth}px;
+        height: ${viewportHeight}px;
         transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
-        transform: perspective(${sightlineDistance}px) rotateX(${
-        90 - newPsi
-      }deg) rotateZ(${newTheta}deg) ;
+        transform: perspective(${sightlineDistance}px) translateZ(${-cameraVector[2]}px) rotateX(${
+        90 - psi
+      }deg) rotateZ(${theta}deg);
       }
       .surface__text {
         display: flex;
         justify-content: center;
         align-items: center;
-        backface-visibility: none;
-        font-size: 40px;
+        backface-visibility: hidden;
+        font-size: 4px;
         color: white;
       }
       .buttons {
@@ -276,10 +292,11 @@
         position: static;
       }
       .outline {
-        left: 0px;
-        top: 0px;
-        width: 2040px;
-        height: 920px;
+        left: ${objectiveVector[0] - viewportWidth / 2}px;
+        top: ${objectiveVector[1] - viewportHeight / 2}px;
+        width: ${viewportWidth}px;
+        height: ${viewportHeight}px;
+        background: rgba(255,255,255,0.3);
       }
       .field {
         left: 0px;
@@ -304,7 +321,7 @@
           0px 9px, 9px 9px, 9px 0 );
       }
       .torso div {
-        font-size: 100px;
+        font-size: 10px;
         background: red;
       }
       .torso__back {
@@ -312,7 +329,7 @@
         flex-direction: column;
       }
       .torso__back .name {
-        font-size: 20px;
+        font-size: 2px;
         position: static;
         margin: auto;
       }
@@ -363,13 +380,14 @@
         position: static;
         margin: auto;
         color: black;
-        font-size: 24px;
+        font-size: 2.4px;
         font-weight: bold;
       }
       .mouth {
         position: static;
         margin: auto;
         color: white;
+        font-size: 2.4px;
         font-weight: bold;
       }
       .helmet__trim {
@@ -430,10 +448,10 @@
       }
       @keyframes flip {
         from {
-          transform rotateX(0deg);
+          transform: translateZ(${offsets.waist}px) rotateX(0deg);
         }
         to {
-          transform: rotateX(360deg);
+          transform: translateZ(${offsets.waist}px) rotateX(360deg);
         }
       }
       `;
@@ -507,10 +525,10 @@
         transform: translateZ(${offsets.waist}px);
       }
       .leg__left {
-        left: 30px;
+        left: ${offsets.leg}px;
       }
       .leg__right {
-        left: -30px;
+        left: ${-offsets.leg}px;
       }
       .knee {
         transform: translateZ(${offsets.knee}px);
@@ -522,10 +540,10 @@
         transform: translateZ(${offsets.pads}px);
       }
       .arm__left {
-        left: 80px;
+        left: ${offsets.arm}px;
       }
       .arm__right {
-        left: -80px;
+        left: ${-offsets.leg}px;
       }
       .elbow {
         transform: translateZ(${offsets.elbow}px);
@@ -594,7 +612,7 @@
 
       function flip() {
         animation.innerHTML = `
-      .torso {
+      .waist {
         animation: 1s forwards flip;
       }
       `;
