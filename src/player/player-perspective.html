@@ -618,7 +618,38 @@
       `;
       }
 
+      const direction = document.createElement('style');
+
+      function faceNorth() {
+        direction.innerHTML = `
+        .waist {
+          transform: translateZ(${offsets.waist}px) rotateZ(180deg);
+        }`;
+      }
+
+      function faceEast() {
+        direction.innerHTML = `
+        .waist {
+          transform: translateZ(${offsets.waist}px) rotateZ(-90deg);
+        }`;
+      }
+
+      function faceSouth() {
+        direction.innerHTML = `
+        .waist {
+          transform: translateZ(${offsets.waist}px);
+        }`;
+      }
+
+      function faceWest() {
+        direction.innerHTML = `
+        .waist {
+          transform: translateZ(${offsets.waist}px) rotateZ(90deg);
+        }`;
+      }
+
       document.body.appendChild(animation);
+      document.body.appendChild(direction);
     </script>
   </body>
 </html>
