@@ -1,182 +1,165 @@
 <html>
   <head> </head>
   <body>
-    <div class="buttons">
-      <button onclick="stand()">STAND</button>
-      <button onclick="walk()">WALK</button>
-      <button onclick="run()">RUN</button>
-      <button onclick="flip()">FLIP</button>
-      <button onclick="faceNorth()">FACE NORTH</button>
-      <button onclick="faceWest()">FACE WEST</button>
-      <button onclick="faceSouth()">FACE SOUTH</button>
-      <button onclick="faceEast()">FACE EAST</button>
-    </div>
-    <div class="outline"></div>
-    <div class="floor">
-      <div class="field">
-        <div class="field-objective"></div>
-      </div>
-      <div class="waist">
-        <div class="torso">
-          <div class="surface__text torso__front">88</div>
-          <div class="torso__back">
-            <div class="surface__text name">FLINTSTONE</div>
-            <div class="surface__text number">88</div>
-          </div>
-          <div class="torso__right"></div>
-          <div class="torso__left"></div>
-          <div class="torso__top"></div>
-          <div class="torso__bottom"></div>
-        </div>
-        <div class="leg__left">
-          <div class="thigh">
-            <div class="thigh__front"></div>
-            <div class="thigh__back"></div>
-            <div class="thigh__right"></div>
-            <div class="thigh__left"></div>
-            <div class="thigh__top"></div>
-            <div class="thigh__bottom"></div>
-          </div>
-          <div class="knee">
-            <div class="calf">
-              <div class="calf__front"></div>
-              <div class="calf__back"></div>
-              <div class="calf__right"></div>
-              <div class="calf__left"></div>
-              <div class="calf__top"></div>
-              <div class="calf__bottom"></div>
+    <div class="wrapper">
+      <div class="floorZ">
+        <div class="floorX">
+          <div class="floorY">
+            <div class="field">
+              <div class="field-objective"></div>
             </div>
-            <div class="foot">
-              <div class="foot__front"></div>
-              <div class="foot__back"></div>
-              <div class="foot__right"></div>
-              <div class="foot__left"></div>
-              <div class="foot__top"></div>
-              <div class="foot__bottom"></div>
-            </div>
-          </div>
-        </div>
-        <div class="leg__right">
-          <div class="thigh">
-            <div class="thigh__front"></div>
-            <div class="thigh__back"></div>
-            <div class="thigh__right"></div>
-            <div class="thigh__left"></div>
-            <div class="thigh__top"></div>
-            <div class="thigh__bottom"></div>
-          </div>
-          <div class="knee">
-            <div class="calf">
-              <div class="calf__front"></div>
-              <div class="calf__back"></div>
-              <div class="calf__right"></div>
-              <div class="calf__left"></div>
-              <div class="calf__top"></div>
-              <div class="calf__bottom"></div>
-            </div>
-            <div class="foot">
-              <div class="foot__front"></div>
-              <div class="foot__back"></div>
-              <div class="foot__right"></div>
-              <div class="foot__left"></div>
-              <div class="foot__top"></div>
-              <div class="foot__bottom"></div>
-            </div>
-          </div>
-        </div>
-        <div class="pads">
-          <div class="arm__left">
-            <div class="shoulder">
-              <div class="shoulder__front"></div>
-              <div class="shoulder__back"></div>
-              <div class="shoulder__right"></div>
-              <div class="shoulder__left"></div>
-              <div class="shoulder__top"></div>
-              <div class="shoulder__bottom"></div>
-            </div>
-            <div class="upper">
-              <div class="upper__front"></div>
-              <div class="upper__back"></div>
-              <div class="upper__right"></div>
-              <div class="upper__left"></div>
-              <div class="upper__top"></div>
-              <div class="upper__bottom"></div>
-            </div>
-            <div class="elbow">
-              <div class="lower">
-                <div class="lower__front"></div>
-                <div class="lower__back"></div>
-                <div class="lower__right"></div>
-                <div class="lower__left"></div>
-                <div class="lower__top"></div>
-                <div class="lower__bottom"></div>
+            <div class="waist">
+              <div class="torso">
+                <div class="surface__text torso__front">88</div>
+                <div class="torso__back">
+                  <div class="surface__text name">FLINTSTONE</div>
+                  <div class="surface__text number">88</div>
+                </div>
+                <div class="torso__right"></div>
+                <div class="torso__left"></div>
+                <div class="torso__top"></div>
+                <div class="torso__bottom"></div>
+              </div>
+              <div class="leg__left">
+                <div class="thigh">
+                  <div class="thigh__front"></div>
+                  <div class="thigh__back"></div>
+                  <div class="thigh__right"></div>
+                  <div class="thigh__left"></div>
+                  <div class="thigh__top"></div>
+                  <div class="thigh__bottom"></div>
+                </div>
+                <div class="knee">
+                  <div class="calf">
+                    <div class="calf__front"></div>
+                    <div class="calf__back"></div>
+                    <div class="calf__right"></div>
+                    <div class="calf__left"></div>
+                    <div class="calf__top"></div>
+                    <div class="calf__bottom"></div>
+                  </div>
+                  <div class="foot">
+                    <div class="foot__front"></div>
+                    <div class="foot__back"></div>
+                    <div class="foot__right"></div>
+                    <div class="foot__left"></div>
+                    <div class="foot__top"></div>
+                    <div class="foot__bottom"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="leg__right">
+                <div class="thigh">
+                  <div class="thigh__front"></div>
+                  <div class="thigh__back"></div>
+                  <div class="thigh__right"></div>
+                  <div class="thigh__left"></div>
+                  <div class="thigh__top"></div>
+                  <div class="thigh__bottom"></div>
+                </div>
+                <div class="knee">
+                  <div class="calf">
+                    <div class="calf__front"></div>
+                    <div class="calf__back"></div>
+                    <div class="calf__right"></div>
+                    <div class="calf__left"></div>
+                    <div class="calf__top"></div>
+                    <div class="calf__bottom"></div>
+                  </div>
+                  <div class="foot">
+                    <div class="foot__front"></div>
+                    <div class="foot__back"></div>
+                    <div class="foot__right"></div>
+                    <div class="foot__left"></div>
+                    <div class="foot__top"></div>
+                    <div class="foot__bottom"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="pads">
+                <div class="arm__left">
+                  <div class="shoulder">
+                    <div class="shoulder__front"></div>
+                    <div class="shoulder__back"></div>
+                    <div class="shoulder__right"></div>
+                    <div class="shoulder__left"></div>
+                    <div class="shoulder__top"></div>
+                    <div class="shoulder__bottom"></div>
+                  </div>
+                  <div class="upper">
+                    <div class="upper__front"></div>
+                    <div class="upper__back"></div>
+                    <div class="upper__right"></div>
+                    <div class="upper__left"></div>
+                    <div class="upper__top"></div>
+                    <div class="upper__bottom"></div>
+                  </div>
+                  <div class="elbow">
+                    <div class="lower">
+                      <div class="lower__front"></div>
+                      <div class="lower__back"></div>
+                      <div class="lower__right"></div>
+                      <div class="lower__left"></div>
+                      <div class="lower__top"></div>
+                      <div class="lower__bottom"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="arm__right">
+                  <div class="shoulder">
+                    <div class="shoulder__front"></div>
+                    <div class="shoulder__back"></div>
+                    <div class="shoulder__right"></div>
+                    <div class="shoulder__left"></div>
+                    <div class="shoulder__top"></div>
+                    <div class="shoulder__bottom"></div>
+                  </div>
+                  <div class="upper">
+                    <div class="upper__front"></div>
+                    <div class="upper__back"></div>
+                    <div class="upper__right"></div>
+                    <div class="upper__left"></div>
+                    <div class="upper__top"></div>
+                    <div class="upper__bottom"></div>
+                  </div>
+                  <div class="elbow">
+                    <div class="lower">
+                      <div class="lower__front"></div>
+                      <div class="lower__back"></div>
+                      <div class="lower__right"></div>
+                      <div class="lower__left"></div>
+                      <div class="lower__top"></div>
+                      <div class="lower__bottom"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="neck">
+                <div class="head">
+                  <div class="head__front">
+                    <div class="eyes">@&nbsp;&nbsp;&nbsp;@</div>
+                    <div class="mouth">XXXX</div>
+                  </div>
+                  <div class="head__right"></div>
+                  <div class="head__left"></div>
+                  <div class="head__bottom"></div>
+                </div>
+                <div class="helmet">
+                  <div class="shield__top"></div>
+                  <div class="shield__back"></div>
+                  <div class="helmet__trim helmet__back"></div>
+                  <div class="surface__text helmet__trim helmet__right">S</div>
+                  <div class="surface__text helmet__trim helmet__left">S</div>
+                  <div class="helmet__trim helmet__top"></div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="arm__right">
-            <div class="shoulder">
-              <div class="shoulder__front"></div>
-              <div class="shoulder__back"></div>
-              <div class="shoulder__right"></div>
-              <div class="shoulder__left"></div>
-              <div class="shoulder__top"></div>
-              <div class="shoulder__bottom"></div>
-            </div>
-            <div class="upper">
-              <div class="upper__front"></div>
-              <div class="upper__back"></div>
-              <div class="upper__right"></div>
-              <div class="upper__left"></div>
-              <div class="upper__top"></div>
-              <div class="upper__bottom"></div>
-            </div>
-            <div class="elbow">
-              <div class="lower">
-                <div class="lower__front"></div>
-                <div class="lower__back"></div>
-                <div class="lower__right"></div>
-                <div class="lower__left"></div>
-                <div class="lower__top"></div>
-                <div class="lower__bottom"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="neck">
-          <div class="head">
-            <div class="head__front">
-              <div class="eyes">@&nbsp;&nbsp;&nbsp;@</div>
-              <div class="mouth">XXXX</div>
-            </div>
-            <div class="head__right"></div>
-            <div class="head__left"></div>
-            <div class="head__bottom"></div>
-          </div>
-          <div class="helmet">
-            <div class="shield__top"></div>
-            <div class="shield__back"></div>
-            <div class="helmet__trim helmet__back"></div>
-            <div class="surface__text helmet__trim helmet__right">S</div>
-            <div class="surface__text helmet__trim helmet__left">S</div>
-            <div class="helmet__trim helmet__top"></div>
           </div>
         </div>
       </div>
     </div>
     <script>
       // const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
-      // const volumes = {
-      //   torso: [10, 190, 60, 60, 45, 45],
-      //   thigh: [140, 20, 25, 25, 25, 25],
-      //   calf: [150, 10, 20, 20, 20, 20],
-      //   foot: [0, 20, 20, 20, 60, 20],
-      //   shoulder: [30, 30, 30, 30, 30, 30],
-      //   upper: [110, 10, 20, 20, 20, 20],
-      //   lower: [100, 20, 15, 15, 15, 15],
-      //   head: [5, 65, 35, 35, 40, 40],
-      //   helmet: [0, 100, 50, 50, 50, 50],
-      // };
-
       const volumes = {
         torso: [1, 19, 6, 6, 4.5, 4.5],
         thigh: [14, 2, 2.5, 2.5, 2.5, 2.5],
@@ -257,24 +240,55 @@
       * {
         box-sizing: border-box;
         position: absolute;
-        transform-style: preserve-3d;
         backface-visibility: inherit;
         font-family: fantasy;
+        // transform-style: preserve-3d;
       }
       body {
         margin: 0;
         padding: 0;
-        background: lightgray;
+        background: transparent;
       }
-      .floor {
-        left: 0px;
-        top: 0px;
-        width: ${viewportWidth}px;
-        height: ${viewportHeight}px;
-        transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
-        transform: perspective(${sightlineDistance}px) translateZ(${-cameraVector[2]}px) rotateX(${
-        90 - psi
-      }deg) rotateZ(${theta}deg);
+      .wrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+      }
+      .floorZ {
+        left: ${-playerVector[0]}px;
+        top: ${-playerVector[1]}px;
+        width: ${2 * playerVector[0]}px;
+        height: ${2 * playerVector[1]}px;
+        transform: translateZ(-400px) rotateZ(0deg);
+        // transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
+        // transform: perspective(${sightlineDistance}px) 
+        // translateZ(${-cameraVector[2]}px) 
+        // rotateX(${90 - psi}deg) rotateZ(${theta}deg);
+      }
+      .floorX {
+        left: ${-playerVector[0]}px;
+        width: ${2 * playerVector[0]}px;
+        transform: perspective(883px) translateX(1020px);
+        transform-style: preserve-3d;
+        // transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
+        // transform: perspective(${sightlineDistance}px) 
+        // translateZ(${-cameraVector[2]}px) 
+        // rotateX(${90 - psi}deg) rotateZ(${theta}deg);
+      }
+      .floorY {
+        left: ${-playerVector[0]}px;
+        top: ${-playerVector[1]}px;
+        width: ${2 * playerVector[0]}px;
+        height: ${2 * playerVector[1]}px;
+        transform-origin: 0 1100px;
+        transform: rotateX(0deg);
+        // transform-style: preserve-3d;
+        // transform-origin: ${objectiveVector[0]}px ${objectiveVector[1]}px;
+        // transform: perspective(${sightlineDistance}px) 
+        // translateZ(${-cameraVector[2]}px) 
+        // rotateX(${90 - psi}deg) rotateZ(${theta}deg);
       }
       .surface__text {
         display: flex;
@@ -297,13 +311,6 @@
         width: ${viewportWidth}px;
         height: ${viewportHeight}px;
         background: rgba(255,255,255,0.3);
-      }
-      .field {
-        left: 0px;
-        top: 0px;
-        width: 2040px;
-        height: 920px;
-        background: center / contain no-repeat url('./field.jpg');
       }
       .waist {
         left: ${playerVector[0]}px;
@@ -562,10 +569,6 @@
 
       function walk() {
         animation.innerHTML = `
-        // .field {
-        //   animation: fieldMotion 3s linear infinite;
-        //   background:
-        // }
       .arm__right {
         animation: 1s 0.5s infinite linear swing45;
       }
