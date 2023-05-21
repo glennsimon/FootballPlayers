@@ -192,6 +192,75 @@
         document.head.appendChild(tempStyle);
       }
 
+      let flybyStyle = document.createElement('style');
+      flybyStyle.id = 'flyby';
+
+      document.head.appendChild(flybyStyle);
+
+      function flyby(cameraVector) {
+        let angleData = calculateAngle(cameraVector);
+        let lookAt = angleData.lookAt;
+        let sightlineVector = angleData.sightlineVector;
+        let sightlineDistance = angleData.sightlineDistance;
+        let psi = angleData.psi;
+        let theta = angleData.theta;
+        flybyStyle.remove();
+        flybyStyle = document.createElement('style');
+        flybyStyle.id = 'flyby';
+        flybyStyle.innerHTML = `.field {
+              left: ${viewportWidth / 2 - lookAt[0]}px;
+              top: ${viewportHeight / 2 - lookAt[1]}px;
+              transform-origin: ${lookAt[0]}px ${lookAt[1]}px;
+              animation: 5s forwards flyby;
+       }
+        @keyframes flyby {
+          to {
+                transform: perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
+          theta
+        )}, ${-Math.sin(theta)}, 0, ${psi}rad);
+              }
+            }
+            .field-objective {
+              left: ${lookAt[0] - 10}px;
+              top: ${lookAt[1] - 10}px;
+            }
+            `;
+        document.head.appendChild(flybyStyle);
+      }
+
+      flyby([playerVector[0] - 100, playerVector[1], 50]);
+
+      function calculateAngle(cameraVector) {
+        const angleData = {};
+        // leaving lookAt here in case I want to change it
+        let lookAt = [
+          (fieldWidth / 2 + playerVector[0]) / 2,
+          (fieldHeight / 2 + playerVector[1]) / 2,
+          8 * zScale,
+        ];
+        let sightlineVector = cameraVector.map((item, index) => {
+          return item - lookAt[index];
+        });
+        let sightlineDistance =
+          (sightlineVector[0] ** 2 +
+            sightlineVector[1] ** 2 +
+            sightlineVector[2] ** 2) **
+          0.5;
+        let psi =
+          Math.PI / 2 -
+          Math.atan(
+            sightlineVector[2] /
+              (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
+          );
+        let theta = Math.atan(-sightlineVector[0] / sightlineVector[1]);
+        angleData.lookAt = lookAt;
+        angleData.sightlineVector = sightlineVector;
+        angleData.sightlineDistance = sightlineDistance;
+        angleData.psi = psi;
+        angleData.theta = theta;
+        return angleData;
+      }
+
       const volumes = {
         torso: [10, 190, 60, 60, 45, 45],
         thigh: [140, 20, 25, 25, 25, 25],
