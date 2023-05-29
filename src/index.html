@@ -2,6 +2,11 @@
   <head> </head>
   <body>
     <div class="outline"></div>
+    <div class="buttons">
+      <button onclick="stand()">STAND</button>
+      <button onclick="walk()">WALK</button>
+      <button onclick="run()">RUN</button>
+    </div>
     <div class="wrapper">
       <div class="field">
         <div class="player-location"></div>
@@ -20,11 +25,7 @@
         (fieldHeight / 2 + playerVector[1]) / 2,
         8 * zScale,
       ];
-      const cameraVector = [
-        fieldWidth / 2,
-        fieldHeight / 2 + 640,
-        400 * zScale,
-      ];
+      let cameraVector = [fieldWidth / 2, fieldHeight / 2 + 640, 400 * zScale];
       let sightlineVector = cameraVector.map((item, index) => {
         return item - lookAt[index];
       });
@@ -70,15 +71,6 @@
         theta = Math.atan(sightlineVector[0] / sightlineVector[1]);
       }
 
-      const holding = `transform-origin: ${cameraVector[0]}px ${
-        cameraVector[1]
-      }px;
-              transform: perspective(${sightlineDistance}px) translateY(200px) rotateX(${psi}rad) rotateZ(${theta}rad) translate3d(0px, 0px, 0px)
-              left: ${640 - lookAt[0]}px;
-              top: ${360 - lookAt[1]}px;
-              transform-origin: ${lookAt[0]}px ${lookAt[1]}px;
-              ;`;
-
       const style = document.createElement('style');
       style.innerHTML = `
             * {
@@ -105,6 +97,13 @@
               width: 1280px;
               height: 720px;
             }
+            .buttons {
+              display: flex;
+              flex-direction: column;
+            }
+            button {
+              position: static;
+            }
             .outline {
               left: 0;
               top: 0;
@@ -113,15 +112,15 @@
               background: rgba(255,0,0,0.3);
             }
             .outline2 {
-              left: -${viewportWidth / 2};
-              top: -${viewportHeight / 2};
+              left: ${-viewportWidth / 2};
+              top: ${-viewportHeight / 2};
               width: ${2 * viewportWidth}px;
               height: ${2 * viewportHeight}px;
               background: rgba(255,255,0,0.3);
             }
             .outline3 {
-              left: -${viewportWidth};
-              top: -${viewportHeight};
+              left: ${-viewportWidth};
+              top: ${-viewportHeight};
               width: ${3 * viewportWidth}px;
               height: ${3 * viewportHeight}px;
               background: rgba(255,0,255,0.3);
@@ -131,7 +130,7 @@
               top: ${viewportHeight / 2 - lookAt[1]}px;
               width: ${fieldWidth}px;
               height: ${fieldHeight}px;
-              background: url('../assets/field.jpg');
+              background: url('./assets/field.jpg');
               background-size: cover;
             }
             .player-location {
@@ -208,9 +207,9 @@
         flybyStyle = document.createElement('style');
         flybyStyle.id = 'flyby';
         flybyStyle.innerHTML = `.field {
-              left: ${viewportWidth / 2 - lookAt[0]}px;
-              top: ${viewportHeight / 2 - lookAt[1]}px;
-              transform-origin: ${lookAt[0]}px ${lookAt[1]}px;
+              left: ${viewportWidth / 2 - lookAt[1]}px;
+              top: ${viewportHeight / 2 - lookAt[0]}px;
+              transform-origin: ${lookAt[1]}px ${lookAt[0]}px;
               animation: 5s forwards flyby;
        }
         @keyframes flyby {
@@ -228,14 +227,22 @@
         document.head.appendChild(flybyStyle);
       }
 
-      flyby([playerVector[0] - 100, playerVector[1], 50]);
+      flyby([
+        // lookAt[1] - viewportHeight / 2 + playerVector[1],
+        // lookAt[0] - viewportWidth / 2 + playerVector[0] - 100,
+        // lookAt[0] - viewportHeight / 2 + playerVector[0] - 100,
+        // lookAt[1] - viewportWidth / 2 + playerVector[1],
+        playerVector[1],
+        playerVector[0] - 100,
+        50,
+      ]);
 
       function calculateAngle(cameraVector) {
         const angleData = {};
         // leaving lookAt here in case I want to change it
         let lookAt = [
-          (fieldWidth / 2 + playerVector[0]) / 2,
           (fieldHeight / 2 + playerVector[1]) / 2,
+          (fieldWidth / 2 + playerVector[0]) / 2,
           8 * zScale,
         ];
         let sightlineVector = cameraVector.map((item, index) => {
@@ -252,7 +259,7 @@
             sightlineVector[2] /
               (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
           );
-        let theta = Math.atan(-sightlineVector[0] / sightlineVector[1]);
+        let theta = Math.atan(-sightlineVector[1] / sightlineVector[0]);
         angleData.lookAt = lookAt;
         angleData.sightlineVector = sightlineVector;
         angleData.sightlineDistance = sightlineDistance;
