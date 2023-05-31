@@ -13,6 +13,7 @@
         <div class="field-objective"></div>
       </div>
     </div>
+    <link rel="stylesheet" href="./assets/football.css"></link>
     <script>
       const fieldWidth = 2040;
       const fieldHeight = 920;
@@ -71,124 +72,25 @@
         theta = Math.atan(sightlineVector[0] / sightlineVector[1]);
       }
 
-      const style = document.createElement('style');
-      style.innerHTML = `
-            * {
-              box-sizing: border-box;
-              position: absolute;
-              backface-visibility: inherit;
-              font-family: fantasy;
-              transform-style: preserve-3d;
-            }
-            body {
-              margin: 0;
-              padding: 0;
-              background: transparent;
-            }
-            // .shifter {
-            //   left: 320px;
-            //   top: 180px;
-            // }
-            .wrapper {
-              position: absolute;
-              left: 0;
-              top: 0;
-              overflow: hidden;
-              width: 1280px;
-              height: 720px;
-            }
-            .buttons {
-              display: flex;
-              flex-direction: column;
-            }
-            button {
-              position: static;
-            }
-            .outline {
-              left: 0;
-              top: 0;
-              width: ${viewportWidth}px;
-              height: ${viewportHeight}px;
-              background: rgba(255,0,0,0.3);
-            }
-            .outline2 {
-              left: ${-viewportWidth / 2};
-              top: ${-viewportHeight / 2};
-              width: ${2 * viewportWidth}px;
-              height: ${2 * viewportHeight}px;
-              background: rgba(255,255,0,0.3);
-            }
-            .outline3 {
-              left: ${-viewportWidth};
-              top: ${-viewportHeight};
-              width: ${3 * viewportWidth}px;
-              height: ${3 * viewportHeight}px;
-              background: rgba(255,0,255,0.3);
-            }
-            .field {
-              left: ${viewportWidth / 2 - lookAt[0]}px;
-              top: ${viewportHeight / 2 - lookAt[1]}px;
-              width: ${fieldWidth}px;
-              height: ${fieldHeight}px;
-              background: url('./assets/field.jpg');
-              background-size: cover;
-            }
-            .player-location {
-              left: 320px;
-              top: 320px;
-            }
-            .field-objective {
-              left: ${lookAt[0] - 10}px;
-              top: ${lookAt[1] - 10}px;
-              width: 20px;
-              height: 20px;
-              background: white;
-              clip-path: polygon(
-                9px 0, 11px 0, 11px 9px, 20px 9px, 20px 11px,
-                11px 11px, 11px 20px, 9px 20px, 9px 11px, 0px 11px,
-                0px 9px, 9px 9px, 9px 0 );
-            }
-            `;
-      document.head.appendChild(style);
-
-      let tempStyle = document.createElement('style');
-      tempStyle.id = 'field_transform';
-      tempStyle.innerHTML = `.field {
-              left: ${viewportWidth / 2 - lookAt[0]}px;
-              top: ${viewportHeight / 2 - lookAt[1]}px;
-              transform-origin: ${lookAt[0]}px ${lookAt[1]}px;
-              transform: perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
+      const field = document.querySelector('.field');
+      field.style.left = `${viewportWidth / 2 - lookAt[0]}px`;
+      field.style.top = `${viewportHeight / 2 - lookAt[1]}px`;
+      field.style.transformOrigin = `${lookAt[0]}px ${lookAt[1]}px`;
+      field.style.transform = `perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
         theta
-      )}, ${-Math.sin(theta)}, 0, ${psi}rad);
-            }
-            `;
-      document.head.appendChild(tempStyle);
+      )}, ${-Math.sin(theta)}, 0, ${psi}rad)`;
+
+      const fieldObjective = document.querySelector('.field-objective');
 
       function changeAngle(e) {
-        tempStyle.remove();
-        tempStyle = document.createElement('style');
-        tempStyle.id = 'field_transform';
-        tempStyle.innerHTML = `.field {
-              left: ${viewportWidth / 2 - lookAt[0]}px;
-              top: ${viewportHeight / 2 - lookAt[1]}px;
-              transform-origin: ${lookAt[0]}px ${lookAt[1]}px;
-              transform: perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
+        field.style.left = `${viewportWidth / 2 - lookAt[0]}px`;
+        field.style.top = `${viewportHeight / 2 - lookAt[1]}px`;
+        field.style.transformOrigin = `${lookAt[0]}px ${lookAt[1]}px;`;
+        field.style.transform = `perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
           theta
-        )}, ${-Math.sin(theta)}, 0, ${psi}rad);
-            }
-            .field-objective {
-              left: ${lookAt[0] - 10}px;
-              top: ${lookAt[1] - 10}px;
-              width: 20px;
-              height: 20px;
-              background: white;
-              clip-path: polygon(
-                9px 0, 11px 0, 11px 9px, 20px 9px, 20px 11px,
-                11px 11px, 11px 20px, 9px 20px, 9px 11px, 0px 11px,
-                0px 9px, 9px 9px, 9px 0 );
-            }
-            `;
-        document.head.appendChild(tempStyle);
+        )}, ${-Math.sin(theta)}, 0, ${psi}rad)`;
+        fieldObjective.style.left = `${lookAt[0] - 10}px`;
+        fieldObjective.style.top = `${lookAt[1] - 10}px`;
       }
 
       let flybyStyle = document.createElement('style');

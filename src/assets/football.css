@@ -1,0 +1,72 @@
+* {
+  box-sizing: border-box;
+  position: absolute;
+  backface-visibility: inherit;
+  font-family: fantasy;
+  transform-style: preserve-3d;
+  --viewport-width: 1280px;
+  --half-width: 640px;
+  --viewport-height: 720px;
+  --half-height: 360px;
+  --field-width: 2040px;
+  --field-height: 920px;
+  --init-x: 320px;
+  --init-y: 320px;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  width: 1280px;
+  height: 720px;
+}
+.buttons {
+  display: flex;
+  flex-direction: column;
+}
+button {
+  position: static;
+}
+.outline {
+  left: 0;
+  top: 0;
+  width: var(--viewport-width);
+  height: var(--viewport-height);
+  background: rgba(255, 0, 0, 0.3);
+}
+.field {
+  width: var(--field-width);
+  height: var(--field-width);
+  background: url('./field.jpg');
+  background-size: cover;
+}
+.player-location {
+  left: var(--init-x);
+  top: var(--init-y);
+}
+.field-objective {
+  width: 20px;
+  height: 20px;
+  background: white;
+  clip-path: polygon(
+    9px 0,
+    11px 0,
+    11px 9px,
+    20px 9px,
+    20px 11px,
+    11px 11px,
+    11px 20px,
+    9px 20px,
+    9px 11px,
+    0px 11px,
+    0px 9px,
+    9px 9px,
+    9px 0
+  );
+}
