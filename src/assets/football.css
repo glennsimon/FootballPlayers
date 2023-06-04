@@ -70,3 +70,173 @@ button {
     9px 0
   );
 }
+.surface__text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: inherit;
+  font-size: 40px;
+  color: white;
+}
+.torso div {
+  font-size: 100px;
+  background: red;
+}
+.torso__back {
+  display: flex;
+  flex-direction: column;
+}
+.torso__back .name {
+  font-size: 20px;
+  position: static;
+  margin: auto;
+}
+.torso__back .number {
+  position: static;
+  margin: auto;
+}
+.shoulder div {
+  background: red;
+}
+.head div {
+  background: Sienna;
+}
+.helmet div {
+  color: red;
+  background: white;
+}
+.shield__top {
+  left: -50px;
+  top: -50px;
+  width: 100px;
+  height: 100px;
+  transform: translateZ(70px);
+}
+.shield__back {
+  transform: translateY(20px);
+}
+.thigh div {
+  background: white;
+}
+.calf div {
+  background: white;
+}
+.foot div {
+  background: black;
+}
+.upper div {
+  background: Sienna;
+}
+.lower div {
+  background: Sienna;
+}
+.head__front {
+  display: flex;
+  flex-direction: column;
+}
+.eyes {
+  position: static;
+  margin: auto;
+  color: black;
+  font-size: 24px;
+  font-weight: bold;
+}
+.mouth {
+  position: static;
+  margin: auto;
+  color: white;
+  font-weight: bold;
+}
+.helmet__trim {
+  clip-path: polygon(
+    30px 0px,
+    70px 0px,
+    100px 30px,
+    100px 70px,
+    70px 100px,
+    30px 100px,
+    0px 70px,
+    0px 30px,
+    30px 0px
+  );
+}
+.waist {
+  transform: translateZ(300px);
+}
+.leg__left {
+  left: 30px;
+}
+.leg__right {
+  left: -30px;
+}
+.knee {
+  transform: translateZ(-140px);
+}
+.foot {
+  transform: translateZ(-160px);
+}
+.pads {
+  transform: translateZ(160px);
+}
+.arm__left {
+  left: 80px;
+}
+.arm__right {
+  left: -80px;
+}
+.elbow {
+  transform: translateZ(-120px);
+}
+.neck {
+  transform: translateZ(200px);
+}
+@keyframes fieldMotion {
+  to {
+    transform: translateY(-600px);
+  }
+}
+@keyframes rotate15 {
+  from {
+    transform: rotateX(45deg);
+  }
+  to {
+    transform: rotateX(45deg) rotateZ(360deg);
+  }
+}
+@keyframes swing45 {
+  33% {
+    transform: rotateX(45deg);
+  }
+  66% {
+    transform: rotateX(-45deg);
+  }
+}
+@keyframes swing45_60 {
+  33% {
+    transform: rotateX(45deg);
+  }
+  66% {
+    transform: rotateX(-60deg);
+  }
+}
+@keyframes kneeSwingWalk {
+  66% {
+    transform: translateZ(-140px) rotateX(-30deg);
+  }
+}
+@keyframes kneeSwingRun {
+  66% {
+    transform: translateZ(-140px) rotateX(-90deg);
+  }
+}
+@keyframes elbows30 {
+  to {
+    transform: translateZ(-120px) rotateX(30deg);
+  }
+}
+@keyframes elbows90 {
+  to {
+    transform: translateZ(-120px) rotateX(90deg);
+    animation-timing-function: ease-in;
+  }
+}

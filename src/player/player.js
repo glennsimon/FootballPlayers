@@ -1,3 +1,124 @@
+const fieldWidth = 2040;
+const fieldHeight = 920;
+const viewportWidth = 1280;
+const viewportHeight = 720;
+let playerVector = [320, 320, 0];
+let lookAt = [];
+let cameraVector = [fieldWidth / 2, fieldHeight / 2 + 640, 400];
+let sightlineVector = [];
+let sightlineDistance;
+
+// angle from horizontal down to lookAt (rad)
+let psi;
+// camera rotation angle about vertical (rad)
+let theta;
+
+function calculateVariables() {
+  lookAt = [
+    (fieldWidth / 2 + playerVector[0]) / 2,
+    (fieldHeight / 2 + playerVector[1]) / 2,
+    8,
+  ];
+  sightlineVector = cameraVector.map((item, index) => {
+    return item - lookAt[index];
+  });
+  sightlineDistance =
+    (sightlineVector[0] ** 2 +
+      sightlineVector[1] ** 2 +
+      sightlineVector[2] ** 2) **
+    0.5;
+  psi =
+    Math.PI / 2 -
+    Math.atan(
+      sightlineVector[2] /
+        (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
+    );
+  theta = Math.atan(sightlineVector[0] / sightlineVector[1]);
+}
+
+const field = document.querySelector('.field');
+const fieldObjective = document.querySelector('.field-objective');
+
+function changeAngle() {
+  field.style.left = `${viewportWidth / 2 - lookAt[0]}px`;
+  field.style.top = `${viewportHeight / 2 - lookAt[1]}px`;
+  field.style.transformOrigin = `${lookAt[0]}px ${lookAt[1]}px;`;
+  field.style.transform = `perspective(${sightlineDistance}px) \
+    rotateZ(${theta}rad) rotate3d(${Math.cos(theta)}, \
+    ${-Math.sin(theta)}, 0, ${psi}rad)`;
+  fieldObjective.style.left = `${lookAt[0] - 10}px`;
+  fieldObjective.style.top = `${lookAt[1] - 10}px`;
+}
+
+let flybyStyle = document.createElement('style');
+flybyStyle.id = 'flyby';
+
+document.head.appendChild(flybyStyle);
+
+function flyby(cameraVector) {
+  let angleData = calculateAngle(cameraVector);
+  let lookAt = angleData.lookAt;
+  let sightlineVector = angleData.sightlineVector;
+  let sightlineDistance = angleData.sightlineDistance;
+  let psi = angleData.psi;
+  let theta = angleData.theta;
+  flybyStyle.remove();
+  flybyStyle = document.createElement('style');
+  flybyStyle.id = 'flyby';
+  flybyStyle.innerHTML = `.field {
+        left: ${viewportWidth / 2 - lookAt[1]}px;
+        top: ${viewportHeight / 2 - lookAt[0]}px;
+        transform-origin: ${lookAt[1]}px ${lookAt[0]}px;
+        animation: 5s forwards flyby;
+ }
+  @keyframes flyby {
+    to {
+          transform: perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
+    theta
+  )}, ${-Math.sin(theta)}, 0, ${psi}rad);
+        }
+      }
+      .field-objective {
+        left: ${lookAt[0] - 10}px;
+        top: ${lookAt[1] - 10}px;
+      }
+      `;
+  document.head.appendChild(flybyStyle);
+}
+
+flyby([playerVector[1], playerVector[0] - 100, 50]);
+
+function calculateAngle(cameraVector) {
+  const angleData = {};
+  // leaving lookAt here in case I want to change it
+  let lookAt = [
+    (fieldHeight / 2 + playerVector[1]) / 2,
+    (fieldWidth / 2 + playerVector[0]) / 2,
+    8,
+  ];
+  let sightlineVector = cameraVector.map((item, index) => {
+    return item - lookAt[index];
+  });
+  let sightlineDistance =
+    (sightlineVector[0] ** 2 +
+      sightlineVector[1] ** 2 +
+      sightlineVector[2] ** 2) **
+    0.5;
+  let psi =
+    Math.PI / 2 -
+    Math.atan(
+      sightlineVector[2] /
+        (sightlineVector[0] ** 2 + sightlineVector[1] ** 2) ** 0.5
+    );
+  let theta = Math.atan(-sightlineVector[1] / sightlineVector[0]);
+  angleData.lookAt = lookAt;
+  angleData.sightlineVector = sightlineVector;
+  angleData.sightlineDistance = sightlineDistance;
+  angleData.psi = psi;
+  angleData.theta = theta;
+  return angleData;
+}
+
 const volumes = {
   torso: [10, 190, 60, 60, 45, 45],
   thigh: [140, 20, 25, 25, 25, 25],
@@ -167,178 +288,13 @@ const playerHtml = `<div class="waist">
 </div>
 </div>`;
 
-const style = document.createElement('style');
-style.innerHTML = `
-.surface__text {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backface-visibility: inherit;
-  font-size: 40px;
-  color: white;
-}
-.torso div {
-  font-size: 100px;
-  background: red;
-}
-.torso__back {
-  display: flex;
-  flex-direction: column;
-}
-.torso__back .name {
-  font-size: 20px;
-  position: static;
-  margin: auto;
-}
-.torso__back .number {
-  position: static;
-  margin: auto;
-}
-.shoulder div {
-  background: red;
-}
-.head div {
-  background: Sienna;
-}
-.helmet div {
-  color: red;
-  background: white;
-}
-.shield__top {
-  left: ${-volumes.helmet[3]}px;
-  top: ${-volumes.helmet[5]}px;
-  width: ${volumes.helmet[1]}px;
-  height: ${volumes.helmet[1]}px;
-  transform: translateZ(${volumes.helmet[1] - offsets.corner}px)
-}
-.shield__back {
-  transform: translateY(${volumes.helmet[5] - offsets.corner}px)
-}
-.thigh div {
-  background: white;
-}
-.calf div {
-  background: white;
-}
-.foot div {
-  background: black;
-}
-.upper div {
-  background: Sienna;
-}
-.lower div {
-  background: Sienna;
-}
-.head__front {
-  display: flex;
-  flex-direction: column;
-}
-.eyes {
-  position: static;
-  margin: auto;
-  color: black;
-  font-size: 24px;
-  font-weight: bold;
-}
-.mouth {
-  position: static;
-  margin: auto;
-  color: white;
-  font-weight: bold;
-}
-.helmet__trim {
-  clip-path: polygon(${offsets.corner}px 0px, ${
-  volumes.helmet[1] - offsets.corner
-}px 0px, ${volumes.helmet[1]}px ${offsets.corner}px,
-  ${volumes.helmet[1]}px ${volumes.helmet[1] - offsets.corner}px,
-  ${volumes.helmet[1] - offsets.corner}px ${volumes.helmet[1]}px,
-  ${offsets.corner}px ${volumes.helmet[1]}px,
-  0px ${volumes.helmet[1] - offsets.corner}px, 0px ${offsets.corner}px, ${
-  offsets.corner
-}px 0px);
-}
-.waist {
-  transform: translateZ(${offsets.waist}px);
-}
-.leg__left {
-  left: 30px;
-}
-.leg__right {
-  left: -30px;
-}
-.knee {
-  transform: translateZ(${offsets.knee}px);
-}
-.foot {
-  transform: translateZ(${offsets.foot}px);
-}
-.pads {
-  transform: translateZ(${offsets.pads}px);
-}
-.arm__left {
-  left: 80px;
-}
-.arm__right {
-  left: -80px;
-}
-.elbow {
-  transform: translateZ(${offsets.elbow}px);
-}
-.neck {
-  transform: translateZ(${offsets.neck}px);
-}
-@keyframes fieldMotion {
-  to {transform: translateY(-600px);}
-}
-@keyframes rotate15 {
-  from {transform: rotateX(45deg)}
-  to {transform: rotateX(45deg) rotateZ(360deg)}
-}
-@keyframes swing45 {
-  33% {
-    transform: rotateX(45deg);
-  }
-  66% {
-    transform: rotateX(-45deg);
-  }
-}
-@keyframes swing45_60 {
-  33% {
-    transform: rotateX(45deg);
-  }
-  66% {
-    transform: rotateX(-60deg);
-  }
-}
-@keyframes kneeSwingWalk {
-  66% {
-    transform: translateZ(${offsets.knee}px) rotateX(-30deg);
-  }
-}
-@keyframes kneeSwingRun {
-  66% {
-    transform: translateZ(${offsets.knee}px) rotateX(-90deg);
-  }
-}
-@keyframes elbows30 {
-  to {
-    transform: translateZ(${offsets.elbow}px) rotateX(30deg);
-  }
-}
-@keyframes elbows90 {
-  to {
-    transform: translateZ(${offsets.elbow}px) rotateX(90deg);
-    animation-timing-function: ease-in;
-  }
-}
-`;
-
-document.head.appendChild(style);
-
 function buildPlayer(team, position, name, number, scale, colors) {
   const player = document.createElement('div');
   player.className = `${team} ${position}`;
-  player.setAttribute('style', `transform: scale3d(${scale}, ${scale}, ${scale})`)
+  player.setAttribute(
+    'style',
+    `transform: scale3d(${scale}, ${scale}, ${scale})`
+  );
   player.innerHTML = playerHtml;
   player.querySelector('.torso__front').innerText = number;
   player.querySelector('.torso__back .name').innerText = name;
@@ -350,62 +306,55 @@ function buildPlayer(team, position, name, number, scale, colors) {
   const faces = ['bottom', 'top', 'left', 'right', 'front', 'back'];
   for (const part of parts) {
     for (const face of faces) {
-      let index = faces.indexOf(face);
-      if (index < 2) {
-        style.innerHTML += `.${part}__${face} {
-              left: ${-volumes[part][2]}px;
-              top: ${-volumes[part][5]}px;
-              width: ${volumes[part][2] + volumes[part][3]}px;
-              height: ${volumes[part][4] + volumes[part][5]}px;
-              transform: rotateY(${index === 1 ? 0 : 180}deg) translateZ(${
-          volumes[part][index]
-        }px);
-            }
-`;
-      } else if (index < 4) {
-        style.innerHTML += `.${part}__${face} {
-left: ${
-          (volumes[part][3] -
-            volumes[part][2] -
-            volumes[part][4] -
-            volumes[part][5]) /
-          2
-        }px;
-top: ${
-          (volumes[part][4] -
-            volumes[part][5] -
-            volumes[part][1] -
-            volumes[part][0]) /
-          2
-        }px;
-width: ${volumes[part][4] + volumes[part][5]}px;
-height: ${volumes[part][0] + volumes[part][1]}px;
-transform: translateZ(${
-          (volumes[part][1] - volumes[part][0]) / 2
-        }px) rotateX(-90deg) rotateY(${index === 3 ? -90 : 90}deg) translateZ(${
-          (volumes[part][2] + volumes[part][3]) / 2
-        }px);
-}
-`;
-      } else {
-        style.innerHTML += `.${part}__${face} {
-  left: ${-volumes[part][2]}px;
-  top: ${
-    (volumes[part][4] -
-      volumes[part][5] -
-      volumes[part][1] -
-      volumes[part][0]) /
-    2
-  }px;
-  width: ${volumes[part][2] + volumes[part][3]}px;
-  height: ${volumes[part][0] + volumes[part][1]}px;
-  transform: translateZ(
-  ${(volumes[part][1] - volumes[part][0]) / 2}px) 
-  rotateX(-90deg) rotateY(
-    ${index === 4 ? 0 : 180}deg) 
-    translateZ(${(volumes[part][4] + volumes[part][5]) / 2}px);
-}
-`;
+      const partFaces = player.querySelectorAll(`.${part}__${face}`);
+      for (const partFace of partFaces) {
+        let index = faces.indexOf(face);
+        if (index < 2) {
+          partFace.style.left = `${-volumes[part][2]}px`;
+          partFace.style.top = `${-volumes[part][5]}px`;
+          partFace.style.width = `${volumes[part][2] + volumes[part][3]}px`;
+          partFace.style.height = `${volumes[part][4] + volumes[part][5]}px`;
+          partFace.style.transform = `rotateY(${index === 1 ? 0 : 180}deg) \
+          translateZ(${volumes[part][index]}px)`;
+        } else if (index < 4) {
+          partFace.style.left = `${
+            (volumes[part][3] -
+              volumes[part][2] -
+              volumes[part][4] -
+              volumes[part][5]) /
+            2
+          }px`;
+          partFace.style.top = `${
+            (volumes[part][4] -
+              volumes[part][5] -
+              volumes[part][1] -
+              volumes[part][0]) /
+            2
+          }px`;
+          partFace.style.width = `${volumes[part][4] + volumes[part][5]}px`;
+          partFace.style.height = `${volumes[part][0] + volumes[part][1]}px`;
+          partFace.style.transform = `translateZ(${
+            (volumes[part][1] - volumes[part][0]) / 2
+          }px) \
+        rotateX(-90deg) rotateY(${index === 3 ? -90 : 90}deg) \
+        translateZ(${(volumes[part][2] + volumes[part][3]) / 2}px)`;
+        } else {
+          partFace.style.left = `${-volumes[part][2]}px`;
+          partFace.style.top = `${
+            (volumes[part][4] -
+              volumes[part][5] -
+              volumes[part][1] -
+              volumes[part][0]) /
+            2
+          }px`;
+          partFace.style.width = `${volumes[part][2] + volumes[part][3]}px`;
+          partFace.style.height = `${volumes[part][0] + volumes[part][1]}px`;
+          partFace.style.transform = `translateZ(${
+            (volumes[part][1] - volumes[part][0]) / 2
+          }px) \
+        rotateX(-90deg) rotateY(${index === 4 ? 0 : 180}deg) \
+        translateZ(${(volumes[part][4] + volumes[part][5]) / 2}px)`;
+        }
       }
     }
   }
@@ -467,10 +416,82 @@ function run() {
 
 // clockwise with 0deg pointing South
 function faceDirection(locationVector, degrees) {
-  const playerLocation = document.querySelector('.player-location');
-  playerLocation.setAttribute('style', `left: ${locationVector[0]}px; top: ${locationVector[1]}px; transform: rotateZ(${degrees}deg);`);
+  playerLocation.setAttribute(
+    'style',
+    `left: ${locationVector[0]}px; top: ${locationVector[1]}px; transform: rotateZ(${degrees}deg);`
+  );
 }
 
 document.head.appendChild(animation);
 
-export { buildPlayer, run, walk, stand, faceDirection };
+const playerLocation = document.querySelector('.player-location');
+playerLocation.appendChild(buildPlayer('S', 'QB', 'SIMON', 7, 0.1));
+faceDirection([320, 320, 0], 270);
+
+const movementKeys = {
+  ArrowDown: 0,
+  ArrowUp: Math.PI,
+  ArrowLeft: Math.PI / 2,
+  ArrowRight: (3 * Math.PI) / 2,
+  Down: 0,
+  Up: Math.PI,
+  Left: Math.PI / 2,
+  Right: (3 * Math.PI) / 2,
+};
+
+const downKeys = {};
+let timestamp;
+let previousTimestamp;
+let moving = false;
+let rate = 0.15;
+
+function step(timestamp) {
+  const deltaT = timestamp - previousTimestamp;
+  previousTimestamp = timestamp;
+
+  const keys = Object.keys(downKeys);
+  console.log(`keys: ${keys}`);
+  if (keys.length === 0) {
+    moving = false;
+    stand();
+    return;
+  }
+  let angle = 0;
+  if (keys.includes('Down') && keys.includes('Right'))
+    downKeys['Down'] = 2 * Math.PI;
+  if (keys.includes('ArrowDown') && keys.includes('ArrowRight'))
+    downKeys['ArrowDown'] = 2 * Math.PI;
+  for (const key of keys) {
+    angle += downKeys[key];
+  }
+  angle = angle / keys.length;
+
+  console.log(`angle: ${angle}`);
+  playerVector = [
+    playerVector[0] - rate * deltaT * Math.sin(angle),
+    playerVector[1] + rate * deltaT * Math.cos(angle),
+    0,
+  ];
+  calculateVariables();
+  changeAngle();
+  faceDirection(playerVector, (360 * angle) / (2 * Math.PI));
+
+  window.requestAnimationFrame(step);
+}
+
+window.addEventListener('keydown', (e) => {
+  if (!Object.keys(movementKeys).includes(e.key)) return;
+  downKeys[e.key] = movementKeys[e.key];
+  if (!moving) {
+    moving = true;
+    previousTimestamp = performance.now();
+    run();
+    window.requestAnimationFrame(step);
+  }
+});
+
+window.addEventListener('keyup', (e) => {
+  delete downKeys[e.key];
+});
+
+calculateVariables();
