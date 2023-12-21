@@ -1,3 +1,6 @@
+import { getPlayerHtml } from './playerHtml.js';
+import { stand, walk, run, flyby } from './playerAnimations.js';
+
 const fieldWidth = 2040;
 const fieldHeight = 920;
 const viewportWidth = 1280;
@@ -42,7 +45,7 @@ const fieldObjective = document.querySelector('.field-objective');
 function changeAngle() {
   field.style.left = `${viewportWidth / 2 - lookAt[0]}px`;
   field.style.top = `${viewportHeight / 2 - lookAt[1]}px`;
-  field.style.transformOrigin = `${lookAt[0]}px ${lookAt[1]}px;`;
+  field.style.transformOrigin = `${lookAt[0]}px ${lookAt[1]}px`;
   field.style.transform = `perspective(${sightlineDistance}px) \
     rotateZ(${theta}rad) rotate3d(${Math.cos(theta)}, \
     ${-Math.sin(theta)}, 0, ${psi}rad)`;
@@ -50,43 +53,7 @@ function changeAngle() {
   fieldObjective.style.top = `${lookAt[1] - 10}px`;
 }
 
-let flybyStyle = document.createElement('style');
-flybyStyle.id = 'flyby';
-
-document.head.appendChild(flybyStyle);
-
-function flyby(cameraVector) {
-  let angleData = calculateAngle(cameraVector);
-  let lookAt = angleData.lookAt;
-  let sightlineVector = angleData.sightlineVector;
-  let sightlineDistance = angleData.sightlineDistance;
-  let psi = angleData.psi;
-  let theta = angleData.theta;
-  flybyStyle.remove();
-  flybyStyle = document.createElement('style');
-  flybyStyle.id = 'flyby';
-  flybyStyle.innerHTML = `.field {
-        left: ${viewportWidth / 2 - lookAt[1]}px;
-        top: ${viewportHeight / 2 - lookAt[0]}px;
-        transform-origin: ${lookAt[1]}px ${lookAt[0]}px;
-        animation: 5s forwards flyby;
- }
-  @keyframes flyby {
-    to {
-          transform: perspective(${sightlineDistance}px) rotateZ(${theta}rad) rotate3d(${Math.cos(
-    theta
-  )}, ${-Math.sin(theta)}, 0, ${psi}rad);
-        }
-      }
-      .field-objective {
-        left: ${lookAt[0] - 10}px;
-        top: ${lookAt[1] - 10}px;
-      }
-      `;
-  document.head.appendChild(flybyStyle);
-}
-
-flyby([playerVector[1], playerVector[0] - 100, 50]);
+flyby([playerVector[1], playerVector[0] - 100, 100]);
 
 function calculateAngle(cameraVector) {
   const angleData = {};
@@ -141,153 +108,6 @@ const offsets = {
   corner: 30,
 };
 
-const playerHtml = `<div class="waist">
-<div class="torso">
-  <div class="surface__text torso__front">88</div>
-  <div class="torso__back">
-    <div class="surface__text name">FLINTSTONE</div>
-    <div class="surface__text number">88</div>
-  </div>
-  <div class="torso__right"></div>
-  <div class="torso__left"></div>
-  <div class="torso__top"></div>
-  <div class="torso__bottom"></div>
-</div>
-<div class="leg__left">
-  <div class="thigh">
-    <div class="thigh__front"></div>
-    <div class="thigh__back"></div>
-    <div class="thigh__right"></div>
-    <div class="thigh__left"></div>
-    <div class="thigh__top"></div>
-    <div class="thigh__bottom"></div>
-  </div>
-  <div class="knee">
-    <div class="calf">
-      <div class="calf__front"></div>
-      <div class="calf__back"></div>
-      <div class="calf__right"></div>
-      <div class="calf__left"></div>
-      <div class="calf__top"></div>
-      <div class="calf__bottom"></div>
-    </div>
-    <div class="foot">
-      <div class="foot__front"></div>
-      <div class="foot__back"></div>
-      <div class="foot__right"></div>
-      <div class="foot__left"></div>
-      <div class="foot__top"></div>
-      <div class="foot__bottom"></div>
-    </div>
-  </div>
-</div>
-<div class="leg__right">
-  <div class="thigh">
-    <div class="thigh__front"></div>
-    <div class="thigh__back"></div>
-    <div class="thigh__right"></div>
-    <div class="thigh__left"></div>
-    <div class="thigh__top"></div>
-    <div class="thigh__bottom"></div>
-  </div>
-  <div class="knee">
-    <div class="calf">
-      <div class="calf__front"></div>
-      <div class="calf__back"></div>
-      <div class="calf__right"></div>
-      <div class="calf__left"></div>
-      <div class="calf__top"></div>
-      <div class="calf__bottom"></div>
-    </div>
-    <div class="foot">
-      <div class="foot__front"></div>
-      <div class="foot__back"></div>
-      <div class="foot__right"></div>
-      <div class="foot__left"></div>
-      <div class="foot__top"></div>
-      <div class="foot__bottom"></div>
-    </div>
-  </div>
-</div>
-<div class="pads">
-  <div class="arm__left">
-    <div class="shoulder">
-      <div class="shoulder__front"></div>
-      <div class="shoulder__back"></div>
-      <div class="shoulder__right"></div>
-      <div class="shoulder__left"></div>
-      <div class="shoulder__top"></div>
-      <div class="shoulder__bottom"></div>
-    </div>
-    <div class="upper">
-      <div class="upper__front"></div>
-      <div class="upper__back"></div>
-      <div class="upper__right"></div>
-      <div class="upper__left"></div>
-      <div class="upper__top"></div>
-      <div class="upper__bottom"></div>
-    </div>
-    <div class="elbow">
-      <div class="lower">
-        <div class="lower__front"></div>
-        <div class="lower__back"></div>
-        <div class="lower__right"></div>
-        <div class="lower__left"></div>
-        <div class="lower__top"></div>
-        <div class="lower__bottom"></div>
-      </div>
-    </div>
-  </div>
-  <div class="arm__right">
-    <div class="shoulder">
-      <div class="shoulder__front"></div>
-      <div class="shoulder__back"></div>
-      <div class="shoulder__right"></div>
-      <div class="shoulder__left"></div>
-      <div class="shoulder__top"></div>
-      <div class="shoulder__bottom"></div>
-    </div>
-    <div class="upper">
-      <div class="upper__front"></div>
-      <div class="upper__back"></div>
-      <div class="upper__right"></div>
-      <div class="upper__left"></div>
-      <div class="upper__top"></div>
-      <div class="upper__bottom"></div>
-    </div>
-    <div class="elbow">
-      <div class="lower">
-        <div class="lower__front"></div>
-        <div class="lower__back"></div>
-        <div class="lower__right"></div>
-        <div class="lower__left"></div>
-        <div class="lower__top"></div>
-        <div class="lower__bottom"></div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="neck">
-  <div class="head">
-    <div class="head__front">
-      <div class="eyes">@&nbsp;&nbsp;&nbsp;@</div>
-      <div class="mouth">|+|+|+|</div>
-    </div>
-    <div class="head__right"></div>
-    <div class="head__left"></div>
-    <div class="head__bottom"></div>
-  </div>
-  <div class="helmet">
-    <div class="shield__top"></div>
-    <div class="shield__back"></div>
-    <div class="helmet__trim helmet__back"></div>
-    <div class="surface__text helmet__trim helmet__right">S</div>
-    <div class="surface__text helmet__trim helmet__left">S</div>
-    <div class="helmet__trim helmet__top"></div>
-  </div>
-</div>
-</div>`;
-
 function buildPlayer(team, position, name, number, scale, colors) {
   const player = document.createElement('div');
   player.className = `${team} ${position}`;
@@ -295,7 +115,7 @@ function buildPlayer(team, position, name, number, scale, colors) {
     'style',
     `transform: scale3d(${scale}, ${scale}, ${scale})`
   );
-  player.innerHTML = playerHtml;
+  player.innerHTML = getPlayerHtml();
   player.querySelector('.torso__front').innerText = number;
   player.querySelector('.torso__back .name').innerText = name;
   player.querySelector('.torso__back .number').innerText = number;
@@ -362,58 +182,6 @@ function buildPlayer(team, position, name, number, scale, colors) {
   return player;
 }
 
-const animation = document.createElement('style');
-
-function stand() {
-  animation.innerHTML = '';
-}
-
-function walk() {
-  animation.innerHTML = `
-.arm__right {
-  animation: 1s 0.5s infinite linear swing45;
-}
-.arm__left {
-  animation: 1s infinite linear swing45;
-}
-.leg__right {
-  animation: 1s infinite linear swing45;
-}
-.leg__left {
-  animation: 1s 0.5s infinite linear swing45;
-}
-.knee {
-  animation: 0.5s infinite linear kneeSwingWalk;
-}
-.elbow {
-  animation: 0.5s forwards elbows30;
-}
-`;
-}
-
-function run() {
-  animation.innerHTML = `
-.arm__right {
-  animation: 0.5s 0.25s infinite linear swing45_60;
-}
-.arm__left {
-  animation: 0.5s infinite linear swing45_60;
-}
-.leg__right {
-  animation: 0.5s infinite linear swing45_60;
-}
-.leg__left {
-  animation: 0.5s 0.25s infinite linear swing45_60;
-}
-.knee {
-  animation: 0.25s infinite linear kneeSwingRun;
-}
-.elbow {
-  animation: 0.5s forwards elbows90;
-}
-`;
-}
-
 // clockwise with 0deg pointing South
 function faceDirection(locationVector, degrees) {
   playerLocation.setAttribute(
@@ -421,8 +189,6 @@ function faceDirection(locationVector, degrees) {
     `left: ${locationVector[0]}px; top: ${locationVector[1]}px; transform: rotateZ(${degrees}deg);`
   );
 }
-
-document.head.appendChild(animation);
 
 const playerLocation = document.querySelector('.player-location');
 playerLocation.appendChild(buildPlayer('S', 'QB', 'SIMON', 7, 0.1));
@@ -495,3 +261,6 @@ window.addEventListener('keyup', (e) => {
 });
 
 calculateVariables();
+changeAngle();
+
+export { calculateAngle, viewportHeight, viewportWidth };

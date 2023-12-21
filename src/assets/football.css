@@ -42,7 +42,7 @@ button {
 }
 .field {
   width: var(--field-width);
-  height: var(--field-width);
+  height: var(--field-height);
   background: url('./field.jpg');
   background-size: cover;
 }
